@@ -1,0 +1,19 @@
+delimiters "$", "$"
+classMap ::= [
+   "int": "Integer",
+    "float": "Float",
+    "double": "Double",
+    "boolean": "Boolean",
+    "long": "Long",
+    default: key
+]
+
+recordOptic(details) ::= <<
+package $details.packageName$;
+import one.xingyi.optics.ITraversal;
+import one.xingyi.optics.ILens;
+
+public interface $details.className$Optics {
+ $details.fieldDetails: {x | ILens<$details.className$,$classMap.(x.fieldType)$> $x.name$L=ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
+ $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $classMap.(x.containedFieldType)$> $x.name$T = ITraversal.from$x.simpleCollectionType$Lens($x.name$L);$\n$$endif$}$}
+>>
