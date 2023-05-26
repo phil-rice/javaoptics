@@ -1,4 +1,4 @@
-package one.focuson.optics.optics;
+package one.focuson.optics;
 
 import java.util.Optional;
 import java.util.function.BiFunction;

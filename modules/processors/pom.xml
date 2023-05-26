@@ -8,8 +8,7 @@
     <artifactId>parent</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>one.focuson</groupId>
-  <artifactId>opticstest</artifactId>
+  <artifactId>processors</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <properties>
@@ -20,8 +19,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>one.focuson</groupId>
-      <artifactId>optics</artifactId>
+      <groupId>org.antlr</groupId>
+      <artifactId>ST4</artifactId>
     </dependency>
   </dependencies>
+
 </project>
