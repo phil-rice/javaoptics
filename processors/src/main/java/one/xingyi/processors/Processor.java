@@ -60,19 +60,23 @@ public class Processor extends AbstractProcessor {
 
     Stream<RecordOpticsDetails> fromAnnotation(RoundEnvironment roundEnv, TypeElement annotation) {
         annotation.getTypeParameters().forEach(t -> log("Type parameter " + t));
-        return roundEnv.getElementsAnnotatedWith(annotation).stream().map(RecordOpticsDetails::fromElement);
+        return roundEnv.getElementsAnnotatedWith(annotation).stream().map(RecordOpticsDetails.fromElement(this::log));
     }
 
     private void processOpticsAnnotation(RoundEnvironment roundEnv, TypeElement annotation) {
         List<RecordOpticsDetails> recordOpticsDetails = fromAnnotation(roundEnv, annotation).toList();
 
         recordOpticsDetails.stream()
-                .map(rod -> RecordOpticsWithTraversals.from(recordOpticsDetails, rod))
+                .map(rod -> {
+                    if (rod.isDebug()) log("Processing " + rod);
+                    var withTraversals = RecordOpticsWithTraversals.from(recordOpticsDetails, rod);
+                    if (rod.isDebug()) log("  --  " + withTraversals);
+                    return withTraversals;
+                })
                 .map(this::makeRecordOpticsFileDefn).forEach(this::makeSourceFile);
     }
 
     private FileDefn makeRecordOpticsFileDefn(RecordOpticsWithTraversals d) {
-        log("Details " + d);
         String rendered = render(d, "recordOptic");
         var className = opticsClassName(d);
         return new FileDefn(className, rendered);

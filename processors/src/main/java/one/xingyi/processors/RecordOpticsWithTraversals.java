@@ -17,10 +17,11 @@ public class RecordOpticsWithTraversals {
     private final boolean addListTraversal;
     private final List<ViewFieldDetails> fieldDetails;
     private final List<TraversalWithFullDetails> traversalDetails;
+    private final boolean debug;
 
     public static RecordOpticsWithTraversals from(List<RecordOpticsDetails> allDetails, RecordOpticsDetails details) {
         return new RecordOpticsWithTraversals(details.getPackageName(), details.getClassName(), details.isAddListTraversal(), details.getFieldDetails(),
-                details.getTraversalDetails().stream().map(t -> TraversalWithFullDetails.from(allDetails, details, t)).toList());
+                details.getTraversalDetails().stream().map(t -> TraversalWithFullDetails.from(allDetails, details, t)).toList(),details.isDebug());
     }
 
 }
@@ -37,7 +38,7 @@ class TraversalWithFullDetails {
         return new TraversalWithFullDetails(details.name(), recordsAndFields);
     }
 
-    public String getClassAtEnd(){
+    public PackageAndClass getClassAtEnd(){
         return path.get(path.size()-1).field.getContainedFieldType();
     }
 
@@ -65,7 +66,7 @@ class RecordAndField {
         RecordAndField recordAndField = new RecordAndField(details, fieldDetails, path.get(index));
         if (index == path.size() - 1) return List.of(recordAndField);
 
-        var newDetails = allDetails.stream().filter(d -> d.getCanonicalName().equals(fieldDetails.containedFieldType)).findFirst();
+        var newDetails = allDetails.stream().filter(d -> d.getCanonicalName().equals(fieldDetails.containedFieldType.getString())).findFirst();
         if (newDetails.isEmpty()) return List.of(recordAndField);
         var restOfList = fromPath(allDetails, newDetails.get(), path, index + 1);
         return Utils.insert(restOfList, recordAndField);

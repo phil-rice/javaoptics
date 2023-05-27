@@ -9,6 +9,8 @@ import one.xingyi.optics.annotations.Optics;
 import javax.lang.model.element.Element;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 
@@ -22,6 +24,7 @@ public final class RecordOpticsDetails {
     private final boolean addListTraversal;
     private final List<ViewFieldDetails> fieldDetails;
     private final List<TraversalDetails> traversalDetails;
+    private final boolean debug;
 
 
     public String getCanonicalName() {
@@ -34,27 +37,31 @@ public final class RecordOpticsDetails {
     }
 
 
-    static RecordOpticsDetails fromFieldDetails(String packageName, String className, boolean addListTraversal, List<FieldDetails> fieldDetails, List<TraversalDetails> traversalDetails) {
-        return new RecordOpticsDetails(packageName, className, addListTraversal, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList(), traversalDetails);
+    static RecordOpticsDetails fromFieldDetails(String packageName, String className, boolean addListTraversal, List<FieldDetails> fieldDetails, List<TraversalDetails> traversalDetails, boolean debug) {
+        return new RecordOpticsDetails(packageName, className, addListTraversal, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList(), traversalDetails, debug);
     }
 
-    static RecordOpticsDetails fromElement(Element element) {
-        Optics annotation = element.getAnnotation(Optics.class);
-        List<TraversalDetails> traversals = asList(annotation.traversals()).stream().map(TraversalDetails::fromPath).toList();
-        var pckElement = element.getEnclosingElement();
-        if (!pckElement.getKind().toString().equals("PACKAGE"))
-            throw new RuntimeException("Expected package for " + element + " but got " + pckElement.getKind());
-        var pckName = pckElement.toString();
-        var className = element.getSimpleName().toString();
-        List<FieldDetails> fieldDetails = element.getEnclosedElements().stream().filter(e -> e.getKind().toString().equals("RECORD_COMPONENT")).map(e -> {
-            var name = e.getSimpleName().toString();
-            var type = e.asType().toString();
-            int index = type.indexOf("<");
-            var containedFieldType = index >= 0 ? type.substring(index + 1, type.lastIndexOf(">")) : null;
-            var simpleCollectionType = index >= 0 ? Utils.lastSegment(type.substring(0, index)) : null;
-            return new FieldDetails(type, simpleCollectionType, containedFieldType, name);
-        }).toList();
-        return fromFieldDetails(pckName, className, annotation.addListTraversal(), fieldDetails, traversals);
+    static Function<Element, RecordOpticsDetails> fromElement(Consumer<String> log) {
+        return element -> {
+            Optics annotation = element.getAnnotation(Optics.class);
+            boolean debug = annotation.debug();
+            if (debug) log.accept("Optics - Found " + element + " with annotation " + annotation);
+            List<TraversalDetails> traversals = asList(annotation.traversals()).stream().map(TraversalDetails::fromPath).toList();
+            var pckElement = element.getEnclosingElement();
+            if (!pckElement.getKind().toString().equals("PACKAGE"))
+                throw new RuntimeException("Expected package for " + element + " but got " + pckElement.getKind());
+            var pckName = pckElement.toString();
+            var className = element.getSimpleName().toString();
+            List<FieldDetails> fieldDetails = element.getEnclosedElements().stream().filter(e -> e.getKind().toString().equals("RECORD_COMPONENT")).map(e -> {
+                var name = e.getSimpleName().toString();
+                var type = e.asType().toString();
+                int index = type.indexOf("<");
+                var containedFieldType = index >= 0 ? type.substring(index + 1, type.lastIndexOf(">")) : null;
+                var simpleCollectionType = index >= 0 ? Utils.lastSegment(type.substring(0, index)) : null;
+                return new FieldDetails(PackageAndClass.from(type), PackageAndClass.from(simpleCollectionType), PackageAndClass.from(containedFieldType), name);
+            }).toList();
+            return fromFieldDetails(pckName, className, annotation.addListTraversal(), fieldDetails, traversals, debug);
+        };
     }
 
     private static String getContainedFieldType(String type) {
@@ -69,9 +76,9 @@ public final class RecordOpticsDetails {
 @ToString
 @RequiredArgsConstructor
 class FieldDetails {
-    protected final String fieldType;
-    protected final String simpleCollectionType;
-    protected final String containedFieldType;
+    protected final PackageAndClass fieldType;
+    protected final PackageAndClass simpleCollectionType;
+    protected final PackageAndClass containedFieldType;
     protected final String name;
 }
 
@@ -80,9 +87,9 @@ class FieldDetails {
 @ToString
 @RequiredArgsConstructor
 class ViewFieldDetails {
-    protected final String fieldType;
-    protected final String simpleCollectionType;
-    protected final String containedFieldType;
+    protected final PackageAndClass fieldType;
+    protected final PackageAndClass simpleCollectionType;
+    protected final PackageAndClass containedFieldType;
     protected final String name;
     protected final String setter;
 

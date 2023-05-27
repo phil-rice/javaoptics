@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface Optics {
     String[] traversals() default {};
     boolean addListTraversal() default false;
+
+    boolean debug() default false;
 }

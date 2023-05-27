@@ -24,7 +24,10 @@ firstPath(path) ::= <<
   $pathPart(first(path))$$restPath(rest(path))$
 >>
 traversal(details,recordDetails)::=<<
- $details: {x | ITraversal<$recordDetails.className$,$x.classAtEnd$> $x.name$=
+$if(recordDetails.debug)$//$recordDetails$
+//$details$
+$endif$
+ $details: {x | ITraversal<$recordDetails.className$,$x.classAtEnd.string$> $x.name$=
  $firstPath(x.path)$ ;$\n$}$
 >>
 recordOptic(details) ::= <<
@@ -35,8 +38,8 @@ import one.xingyi.processors.IGeneratedOptics;
 import one.xingyi.optics.ILens;
 
 public interface $details.className$Optics extends IGeneratedOptics<$details.className$> {
+ $details.fieldDetails: {x | ILens<$details.className$,$classMap.(x.fieldType.string)$> $x.name$L=ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
+ $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $classMap.(x.containedFieldType.string)$> $x.name$T = ITraversal.from$x.simpleCollectionType.className$Lens($x.name$L);$\n$$endif$}$
  $if(details.addListTraversal)$ ITraversal<List<$details.className$>,$details.className$> listT=ITraversal.listTraversal();$endif$
- $details.fieldDetails: {x | ILens<$details.className$,$classMap.(x.fieldType)$> $x.name$L=ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
- $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $classMap.(x.containedFieldType)$> $x.name$T = ITraversal.from$x.simpleCollectionType$Lens($x.name$L);$\n$$endif$}$
  $details.traversalDetails:traversal(details)$}
 >>

@@ -1,12 +1,10 @@
 package one.xingyi.annotations.test.seperationOfStructure.withSeparation;
 
-import one.xingyi.annotations.test.seperationOfStructure.ChassisTroncon;
-import one.xingyi.annotations.test.seperationOfStructure.Commande;
-import one.xingyi.annotations.test.seperationOfStructure.CommandeOptics;
-import one.xingyi.annotations.test.seperationOfStructure.IBuisnessMethods;
+import one.xingyi.annotations.test.seperationOfStructure.*;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class BusinessMethods implements IBuisnessMethods {
 
