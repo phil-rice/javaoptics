@@ -1,21 +1,6 @@
 delimiters "$", "$"
-classMap ::= [
-   "int": "Integer",
-    "float": "Float",
-    "double": "Double",
-    "boolean": "Boolean",
-    "long": "Long",
-    default: key
-]
-fullClassMap ::= [
-   "int": "java.lang.Integer",
-    "float": "java.lang.Float",
-    "double": "java.lang.Double",
-    "boolean": "java.lang.Boolean",
-    "long": "java.lang.Long",
-    default: key
-]
-pathPart(recordAndField)::= "$recordAndField.record.canonicalName$Optics.$recordAndField.field.name$T"
+
+pathPart(recordAndField)::= "$recordAndField.record.className$Optics.$recordAndField.field.name$T"
 
 restPath(path) ::=<<$if(path)$
   .andThen($pathPart(first(path))$)$restPath(rest(path))$$endif$>>
@@ -30,16 +15,18 @@ $endif$
  $details: {x | ITraversal<$recordDetails.className$,$x.classAtEnd.string$> $x.name$=
  $firstPath(x.path)$ ;$\n$}$
 >>
-recordOptic(details) ::= <<
+recordOptic(details,allRecordsAndFields) ::= <<
 package $details.packageName$;
 import java.util.List;
 import one.xingyi.optics.ITraversal;
 import one.xingyi.processors.IGeneratedOptics;
 import one.xingyi.optics.ILens;
+$details.fieldDetails: {x | import $x.fieldType.string$;$\n$}$
+$allRecordsAndFields: {rf| import $rf.record.canonicalName$Optics;$\n$}$
 
 public interface $details.className$Optics extends IGeneratedOptics<$details.className$> {
- $details.fieldDetails: {x | ILens<$details.className$,$classMap.(x.fieldType.string)$> $x.name$L=ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
- $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $classMap.(x.containedFieldType.string)$> $x.name$T = ITraversal.from$x.simpleCollectionType.className$Lens($x.name$L);$\n$$endif$}$
+ $details.fieldDetails: {x | ILens<$details.className$,$x.fieldType.shortName$> $x.name$L=ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
+ $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $x.containedFieldType.shortName$> $x.name$T = ITraversal.from$x.simpleCollectionType.className$Lens($x.name$L);$\n$$endif$}$
  $if(details.addListTraversal)$ ITraversal<List<$details.className$>,$details.className$> listT=ITraversal.listTraversal();$endif$
  $details.traversalDetails:traversal(details)$}
 >>

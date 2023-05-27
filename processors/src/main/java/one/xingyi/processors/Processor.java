@@ -65,11 +65,10 @@ public class Processor extends AbstractProcessor {
 
     private void processOpticsAnnotation(RoundEnvironment roundEnv, TypeElement annotation) {
         List<RecordOpticsDetails> recordOpticsDetails = fromAnnotation(roundEnv, annotation).toList();
-
         recordOpticsDetails.stream()
                 .map(rod -> {
                     if (rod.isDebug()) log("Processing " + rod);
-                    var withTraversals = RecordOpticsWithTraversals.from(recordOpticsDetails, rod);
+                    var withTraversals = RecordOpticsWithTraversals.from(recordOpticsDetails, rod, this::log);
                     if (rod.isDebug()) log("  --  " + withTraversals);
                     return withTraversals;
                 })
@@ -78,6 +77,7 @@ public class Processor extends AbstractProcessor {
 
     private FileDefn makeRecordOpticsFileDefn(RecordOpticsWithTraversals d) {
         String rendered = render(d, "recordOptic");
+
         var className = opticsClassName(d);
         return new FileDefn(className, rendered);
     }
@@ -94,8 +94,10 @@ public class Processor extends AbstractProcessor {
     }
 
     String render(RecordOpticsWithTraversals details, String templateName) {
+        List<RecordAndField> allRecordsAndFields = details.getTraversalDetails().stream().flatMap(td -> td.getPath().stream()).distinct().toList();
         var record = stringTemplate.getInstanceOf(templateName);
         record.add("details", details);
+        record.add("allRecordsAndFields", allRecordsAndFields);
         return record.render();
     }
 
