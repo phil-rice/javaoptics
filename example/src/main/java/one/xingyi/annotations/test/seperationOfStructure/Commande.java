@@ -7,13 +7,7 @@ import java.util.List;
 
 @Optics(traversals = {
         "commandeTransportList.tronconTransportList",
-        "commandeTransportList.tronconTransportList.chassisTronconList"})
+        "commandeTransportList.tronconTransportList.chassisTronconList"}, addListTraversal = true)
 public record Commande(List<CommandeTransport> commandeTransportList) {
-    public static ITraversal<List<Commande>, Commande> listCommandetoCommandeT = ITraversal.listTraversal();
-
-    public static ITraversal<Commande, TronconTransport> commandeToTronconTransportT =
-            CommandeOptics.commandeTransportListT.andThen(CommandeTransportOptics.tronconTransportListT);
-    public static ITraversal<Commande, ChassisTroncon> commandeToChassisTronconT =
-            commandeToTronconTransportT.andThen(TronconTransportOptics.chassisTronconListT);
 
 }

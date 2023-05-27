@@ -7,6 +7,14 @@ classMap ::= [
     "long": "Long",
     default: key
 ]
+fullClassMap ::= [
+   "int": "java.lang.Integer",
+    "float": "java.lang.Float",
+    "double": "java.lang.Double",
+    "boolean": "java.lang.Boolean",
+    "long": "java.lang.Long",
+    default: key
+]
 pathPart(recordAndField)::= "$recordAndField.record.canonicalName$Optics.$recordAndField.field.name$T"
 
 restPath(path) ::=<<$if(path)$
@@ -21,10 +29,13 @@ traversal(details,recordDetails)::=<<
 >>
 recordOptic(details) ::= <<
 package $details.packageName$;
+import java.util.List;
 import one.xingyi.optics.ITraversal;
+import one.xingyi.processors.IGeneratedOptics;
 import one.xingyi.optics.ILens;
 
-public interface $details.className$Optics {
+public interface $details.className$Optics extends IGeneratedOptics<$details.className$> {
+ $if(details.addListTraversal)$ ITraversal<List<$details.className$>,$details.className$> listT=ITraversal.listTraversal();$endif$
  $details.fieldDetails: {x | ILens<$details.className$,$classMap.(x.fieldType)$> $x.name$L=ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
  $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $classMap.(x.containedFieldType)$> $x.name$T = ITraversal.from$x.simpleCollectionType$Lens($x.name$L);$\n$$endif$}$
  $details.traversalDetails:traversal(details)$}

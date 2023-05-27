@@ -14,11 +14,12 @@ import java.util.List;
 public class RecordOpticsWithTraversals {
     private final String packageName;
     private final String className;
+    private final boolean addListTraversal;
     private final List<ViewFieldDetails> fieldDetails;
     private final List<TraversalWithFullDetails> traversalDetails;
 
     public static RecordOpticsWithTraversals from(List<RecordOpticsDetails> allDetails, RecordOpticsDetails details) {
-        return new RecordOpticsWithTraversals(details.getPackageName(), details.getClassName(), details.getFieldDetails(),
+        return new RecordOpticsWithTraversals(details.getPackageName(), details.getClassName(), details.isAddListTraversal(), details.getFieldDetails(),
                 details.getTraversalDetails().stream().map(t -> TraversalWithFullDetails.from(allDetails, details, t)).toList());
     }
 

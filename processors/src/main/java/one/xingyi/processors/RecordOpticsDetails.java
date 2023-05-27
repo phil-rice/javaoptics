@@ -19,8 +19,10 @@ import static java.util.Arrays.asList;
 public final class RecordOpticsDetails {
     private final String packageName;
     private final String className;
+    private final boolean addListTraversal;
     private final List<ViewFieldDetails> fieldDetails;
     private final List<TraversalDetails> traversalDetails;
+
 
     public String getCanonicalName() {
         return packageName + "." + className;
@@ -43,8 +45,8 @@ public final class RecordOpticsDetails {
 
     }
 
-    static RecordOpticsDetails fromFieldDetails(String packageName, String className, List<FieldDetails> fieldDetails, List<TraversalDetails> traversalDetails) {
-        return new RecordOpticsDetails(packageName, className, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList(), traversalDetails);
+    static RecordOpticsDetails fromFieldDetails(String packageName, String className, boolean addListTraversal, List<FieldDetails> fieldDetails, List<TraversalDetails> traversalDetails) {
+        return new RecordOpticsDetails(packageName, className, addListTraversal, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList(), traversalDetails);
     }
 
     static RecordOpticsDetails fromElement(Element element) {
@@ -63,7 +65,7 @@ public final class RecordOpticsDetails {
             var simpleCollectionType = index >= 0 ? Utils.lastSegment(type.substring(0, index)) : null;
             return new FieldDetails(type, simpleCollectionType, containedFieldType, name);
         }).toList();
-        return fromFieldDetails(pckName, className, fieldDetails, traversals);
+        return fromFieldDetails(pckName, className, annotation.addListTraversal(), fieldDetails, traversals);
     }
 
     private static String getContainedFieldType(String type) {
