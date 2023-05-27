@@ -4,9 +4,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import one.xingyi.optics.annotations.Optics;
 
 import javax.lang.model.element.Element;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Arrays.asList;
 
 @EqualsAndHashCode
 @Getter
@@ -16,12 +20,36 @@ public final class RecordOpticsDetails {
     private final String packageName;
     private final String className;
     private final List<ViewFieldDetails> fieldDetails;
+    private final List<TraversalDetails> traversalDetails;
 
-    static RecordOpticsDetails fromFieldDetails(String packageName, String className, List<FieldDetails> fieldDetails) {
-        return new RecordOpticsDetails(packageName, className, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList());
+    public String getCanonicalName() {
+        return packageName + "." + className;
+    }
+
+    Optional<ViewFieldDetails> find(String name) {
+        return fieldDetails.stream().filter(vfd -> vfd.name.equals(name)).findFirst();
+
+    }
+
+    ViewFieldDetails fieldDetailsAtEnd(List<RecordOpticsDetails> details, List<String> path, int index) {
+        if (index >= path.size()) return null;
+        var foundField = find(path.get(index));
+        if (foundField.isEmpty()) return null;
+        var fieldDetails = foundField.get();
+        if (index == path.size() - 1) return fieldDetails;
+        var recordDetails = details.stream().filter(d -> d.getCanonicalName().equals(fieldDetails.containedFieldType)).findFirst();
+        if (recordDetails.isEmpty()) return null;
+        return recordDetails.get().fieldDetailsAtEnd(details, path, index + 1);
+
+    }
+
+    static RecordOpticsDetails fromFieldDetails(String packageName, String className, List<FieldDetails> fieldDetails, List<TraversalDetails> traversalDetails) {
+        return new RecordOpticsDetails(packageName, className, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList(), traversalDetails);
     }
 
     static RecordOpticsDetails fromElement(Element element) {
+        Optics annotation = element.getAnnotation(Optics.class);
+        List<TraversalDetails> traversals = asList(annotation.traversals()).stream().map(TraversalDetails::fromPath).toList();
         var pckElement = element.getEnclosingElement();
         if (!pckElement.getKind().toString().equals("PACKAGE"))
             throw new RuntimeException("Expected package for " + element + " but got " + pckElement.getKind());
@@ -35,7 +63,7 @@ public final class RecordOpticsDetails {
             var simpleCollectionType = index >= 0 ? Utils.lastSegment(type.substring(0, index)) : null;
             return new FieldDetails(type, simpleCollectionType, containedFieldType, name);
         }).toList();
-        return fromFieldDetails(pckName, className, fieldDetails);
+        return fromFieldDetails(pckName, className, fieldDetails, traversals);
     }
 
     private static String getContainedFieldType(String type) {
@@ -50,10 +78,10 @@ public final class RecordOpticsDetails {
 @ToString
 @RequiredArgsConstructor
 class FieldDetails {
-    private final String fieldType;
-    private final String simpleCollectionType;
-    private final String containedFieldType;
-    private final String name;
+    protected final String fieldType;
+    protected final String simpleCollectionType;
+    protected final String containedFieldType;
+    protected final String name;
 }
 
 @EqualsAndHashCode
@@ -61,11 +89,11 @@ class FieldDetails {
 @ToString
 @RequiredArgsConstructor
 class ViewFieldDetails {
-    private final String fieldType;
-    private final String simpleCollectionType;
-    private final String containedFieldType;
-    private final String name;
-    private final String setter;
+    protected final String fieldType;
+    protected final String simpleCollectionType;
+    protected final String containedFieldType;
+    protected final String name;
+    protected final String setter;
 
 
     public static ViewFieldDetails oneForRecord(String className, List<FieldDetails> fds, FieldDetails fd) {
@@ -75,5 +103,12 @@ class ViewFieldDetails {
 
         return new ViewFieldDetails(fd.getFieldType(), fd.getSimpleCollectionType(), fd.getContainedFieldType(), fd.getName(), setter);
     }
-
 }
+
+record TraversalDetails(String name, List<String> path) {
+    public static TraversalDetails fromPath(String path) {
+        var name = path.replace('.', '_') + "T";
+        return new TraversalDetails(name, asList(path.split("\\.")));
+    }
+}
+

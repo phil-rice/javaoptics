@@ -7,7 +7,18 @@ classMap ::= [
     "long": "Long",
     default: key
 ]
+pathPart(recordAndField)::= "$recordAndField.record.canonicalName$Optics.$recordAndField.field.name$T"
 
+restPath(path) ::=<<$if(path)$
+  .andThen($pathPart(first(path))$)$restPath(rest(path))$$endif$>>
+
+firstPath(path) ::= <<
+  $pathPart(first(path))$$restPath(rest(path))$
+>>
+traversal(details,recordDetails)::=<<
+ $details: {x | ITraversal<$recordDetails.className$,$x.classAtEnd$> $x.name$=
+ $firstPath(x.path)$ ;$\n$}$
+>>
 recordOptic(details) ::= <<
 package $details.packageName$;
 import one.xingyi.optics.ITraversal;
@@ -15,5 +26,6 @@ import one.xingyi.optics.ILens;
 
 public interface $details.className$Optics {
  $details.fieldDetails: {x | ILens<$details.className$,$classMap.(x.fieldType)$> $x.name$L=ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
- $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $classMap.(x.containedFieldType)$> $x.name$T = ITraversal.from$x.simpleCollectionType$Lens($x.name$L);$\n$$endif$}$}
+ $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $classMap.(x.containedFieldType)$> $x.name$T = ITraversal.from$x.simpleCollectionType$Lens($x.name$L);$\n$$endif$}$
+ $details.traversalDetails:traversal(details)$}
 >>

@@ -5,7 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.RECORD_COMPONENT})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME) // Need to keep them around for testing
-public @interface Traversal {
+public @interface Optics {
+    String[] traversals() default {};
 }

@@ -3,6 +3,7 @@ package one.xingyi.optics;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -11,6 +12,10 @@ public interface ITraversal<Main, Child> extends IFold<Main, Child> {
     static <Main, Child> ITraversal<Main, Child> of(Function<Main, Stream<Child>> allFn,
                                                     BiFunction<Main, Function<Child, Child>, Main> modifyFn) {
         return new Traversal<>(allFn, modifyFn);
+    }
+
+    static <T> ITraversal<List<T>, T> listTraversal() {
+        return new Traversal<>(List::stream, (list, fn) -> list.stream().map(fn).toList());
     }
 
     static <Main, Child> ITraversal<Main, Child> fromListLens(ILens<Main, List<Child>> lens) {
@@ -27,16 +32,18 @@ public interface ITraversal<Main, Child> extends IFold<Main, Child> {
 
     Main modify(Main main, Function<Child, Child> fn);
 
-    <GrandChild> ITraversal<Main, GrandChild> chainTraversal(ITraversal<Child, GrandChild> t);
+    <GrandChild> ITraversal<Main, GrandChild> andThen(ITraversal<Child, GrandChild> t);
 
     <GrandChild> ITraversal<Main, GrandChild> chain(IOptional<Child, GrandChild> t);
 
     ITraversal<Main, Child> filter(Predicate<Child> p);
 
+    void forEach(Main main, Consumer<Child> fn);
+
 }
 
 abstract class AbstractTraversal<Main, Child> extends AbstractFold<Main, Child> implements ITraversal<Main, Child> {
-    public <GrandChild> Traversal<Main, GrandChild> chainTraversal(ITraversal<Child, GrandChild> t) {
+    public <GrandChild> Traversal<Main, GrandChild> andThen(ITraversal<Child, GrandChild> t) {
         return new Traversal<>(
                 main -> all(main).flatMap(t::all),
                 (main, fn) -> modify(main, child -> t.modify(child, fn))
@@ -54,6 +61,11 @@ abstract class AbstractTraversal<Main, Child> extends AbstractFold<Main, Child> 
                 main -> all(main).flatMap(child -> t.optGet(child).stream()),
                 (main, fn) -> modify(main, child -> t.optGet(child).map(fn).map(grandChild -> t.optSet(child, grandChild)).orElse(child))
         );
+    }
+
+    @Override
+    public void forEach(Main main, Consumer<Child> fn) {
+        all(main).forEach(fn);
     }
 }
 
