@@ -6,8 +6,8 @@ import one.xingyi.optics.annotations.Optics;
 import java.util.List;
 
 @Optics(traversals = {
-        "commandeTransportList.tronconTransportList",
-        "commandeTransportList.tronconTransportList.chassisTronconList"}, addListTraversal = true)
+        "commande2tronconTransportT:commandeTransportList.tronconTransportList",
+        "commande2chassisTronconT:commandeTransportList.tronconTransportList.chassisTronconList"}, addListTraversal = true)
 public record Commande(List<CommandeTransport> commandeTransportList) {
 
 }

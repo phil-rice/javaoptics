@@ -33,17 +33,6 @@ public final class RecordOpticsDetails {
 
     }
 
-    ViewFieldDetails fieldDetailsAtEnd(List<RecordOpticsDetails> details, List<String> path, int index) {
-        if (index >= path.size()) return null;
-        var foundField = find(path.get(index));
-        if (foundField.isEmpty()) return null;
-        var fieldDetails = foundField.get();
-        if (index == path.size() - 1) return fieldDetails;
-        var recordDetails = details.stream().filter(d -> d.getCanonicalName().equals(fieldDetails.containedFieldType)).findFirst();
-        if (recordDetails.isEmpty()) return null;
-        return recordDetails.get().fieldDetailsAtEnd(details, path, index + 1);
-
-    }
 
     static RecordOpticsDetails fromFieldDetails(String packageName, String className, boolean addListTraversal, List<FieldDetails> fieldDetails, List<TraversalDetails> traversalDetails) {
         return new RecordOpticsDetails(packageName, className, addListTraversal, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList(), traversalDetails);
@@ -109,8 +98,10 @@ class ViewFieldDetails {
 
 record TraversalDetails(String name, List<String> path) {
     public static TraversalDetails fromPath(String path) {
-        var name = path.replace('.', '_') + "T";
-        return new TraversalDetails(name, asList(path.split("\\.")));
+        var defName = path.replace('.', '_') + "T";
+        var name = Utils.firstPart(path, ":", defName);
+        var actualPath = Utils.lastPart(path, ":", path);
+        return new TraversalDetails(name, asList(actualPath.split("\\.")));
     }
 }
 
