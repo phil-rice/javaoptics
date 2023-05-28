@@ -1,6 +1,6 @@
 delimiters "$", "$"
 
-pathPart(recordAndField)::= "$recordAndField.record.className$Optics.$recordAndField.field.name$T"
+pathPart(pathPart)::= "$pathPart.main.string$Optics.$pathPart.field.fieldName$T"
 
 restPath(path) ::=<<$if(path)$
   .andThen($pathPart(first(path))$)$restPath(rest(path))$$endif$>>
@@ -19,10 +19,9 @@ recordOptic(details,allRecordsAndFields) ::= <<
 package $details.packageName$;
 import java.util.List;
 import one.xingyi.optics.ITraversal;
-import one.xingyi.annotations.processors.IGeneratedOptics;
+import one.xingyi.optics.annotations.processors.IGeneratedOptics;
 import one.xingyi.optics.ILens;
 $details.fieldDetails: {x | import $x.fieldType.string$;$\n$}$
-$allRecordsAndFields: {rf| import $rf.record.canonicalName$Optics;$\n$}$
 
 public interface $details.className$Optics extends IGeneratedOptics<$details.className$> {
  $details.fieldDetails: {x | ILens<$details.className$,$x.fieldType.shortName$> $x.name$L =
