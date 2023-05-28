@@ -98,7 +98,7 @@ public class Processor extends AbstractProcessor {
     private void makeSourceFile(FileDefn fileDefn) {
         try {
             String sourceFile = fileDefn.clazz().getString();
-            log("Making source file " + sourceFile);
+//            log("Making source file " + sourceFile);
             JavaFileObject builderFile = filer.createSourceFile(sourceFile);
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
                 out.println(fileDefn.content());

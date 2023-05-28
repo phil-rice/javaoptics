@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 
 public interface IAnnotationProcessorStore<From, To> extends IAnnotationProcessorLoader<From, To>, IAnnotationProcessorStorer<From, To> {
     static IFunctionWithIoException<PackageAndClass, FileObject> classNameToFileObjectForExtension(Filer filer, String extension) {
-        return pckAndClass -> filer.createResource(StandardLocation.SOURCE_OUTPUT, pckAndClass.getPackageName(), pckAndClass.getClassName() + "." + extension);
+        return pckAndClass -> filer.createResource(StandardLocation.SOURCE_OUTPUT, pckAndClass.getPackageName() + ".storeFor" + extension, pckAndClass.getClassName() + "." + extension);
     }
 
     static <From, To> IAnnotationProcessorStore<From, To> defaultStore(Filer filer,
