@@ -1,6 +1,6 @@
 package one.xingyi.annotations.test;
 
-import one.xingyi.optics.annotations.Optics;
+import one.xingyi.annotations.optics.Optics;
 
 import java.util.List;
 

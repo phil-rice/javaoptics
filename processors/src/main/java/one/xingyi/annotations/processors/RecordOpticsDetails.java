@@ -1,10 +1,10 @@
-package one.xingyi.processors;
+package one.xingyi.annotations.processors;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import one.xingyi.optics.annotations.Optics;
+import one.xingyi.annotations.optics.Optics;
 
 import javax.lang.model.element.Element;
 import java.util.List;
@@ -29,6 +29,10 @@ public final class RecordOpticsDetails {
 
     public String getCanonicalName() {
         return packageName + "." + className;
+    }
+
+    public PackageAndClass getPackageAndClass() {
+        return new PackageAndClass(null, packageName, className);
     }
 
     Optional<ViewFieldDetails> find(String name) {

@@ -1,6 +1,6 @@
 package one.xingyi.annotations.test.seperationOfStructure;
 
-import one.xingyi.optics.annotations.Optics;
+import one.xingyi.annotations.optics.Optics;
 
 @Optics
 public record Wagon(String pfId) implements IMeansOfTransport {

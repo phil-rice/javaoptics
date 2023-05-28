@@ -1,12 +1,12 @@
-package one.xingyi.processors;
+package one.xingyi.annotations.processors;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 @EqualsAndHashCode
 @Getter
@@ -16,6 +16,9 @@ public class PackageAndClass {
     private final PackageAndClass holdingClass;
     private final String packageName;
     private final String className;
+    public PackageAndClass mapClassName(Function<String,String> fn) {
+        return new PackageAndClass(holdingClass, packageName, fn.apply(className));
+    }
 
 
     public static Map<String, PackageAndClass> primitives =

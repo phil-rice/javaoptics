@@ -1,4 +1,4 @@
-package one.xingyi.optics.annotations;
+package one.xingyi.annotations.optics;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

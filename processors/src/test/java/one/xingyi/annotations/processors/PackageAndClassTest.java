@@ -1,4 +1,4 @@
-package one.xingyi.processors;
+package one.xingyi.annotations.processors;
 
 import org.junit.jupiter.api.Test;
 

@@ -6,17 +6,21 @@
   <parent>
     <groupId>one.xingyi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>processors</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <artifactId>example</artifactId>
+  <version>1.0-SNAPSHOT</version>
 
+  <properties>
+    <maven.compiler.source>16</maven.compiler.source>
+    <maven.compiler.target>16</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.antlr</groupId>
-      <artifactId>ST4</artifactId>
+      <groupId>one.xingyi</groupId>
+      <artifactId>optics</artifactId>
     </dependency>
   </dependencies>
-
 </project>

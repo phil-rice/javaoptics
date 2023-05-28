@@ -1,4 +1,4 @@
-package one.xingyi.processors;
+package one.xingyi.annotations.processors;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
