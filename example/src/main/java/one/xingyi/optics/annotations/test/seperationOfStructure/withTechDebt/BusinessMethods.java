@@ -88,7 +88,7 @@ public class BusinessMethods implements IBusinessMethods {
         for (CommandeTransport commandeTransport : commande.commandeTransportList()) {
             for (TronconTransport tronconTransport : commandeTransport.tronconTransportList()) {
                 for (ChassisTroncon troncon : tronconTransport.chassisTronconList()) {
-                    troncon.doSomething();
+                    troncon.doSomethingElse();
                 }
             }
         }
@@ -100,7 +100,7 @@ public class BusinessMethods implements IBusinessMethods {
             for (CommandeTransport commandeTransport : commande1.commandeTransportList()) {
                 for (TronconTransport tronconTransport : commandeTransport.tronconTransportList()) {
                     for (ChassisTroncon troncon : tronconTransport.chassisTronconList()) {
-                        troncon.doSomething();
+                        troncon.doSomethingElse();
                     }
                 }
             }
