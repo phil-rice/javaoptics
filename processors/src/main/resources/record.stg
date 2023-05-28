@@ -1,6 +1,6 @@
 delimiters "$", "$"
 
-pathPart(pathPart)::= "$pathPart.main.string$Optics.$pathPart.field.fieldName$T"
+pathPart(pathPart)::= "$pathPart.main.className$Optics.$pathPart.field.fieldName$T"
 
 restPath(path) ::=<<$if(path)$
   .andThen($pathPart(first(path))$)$restPath(rest(path))$$endif$>>
@@ -12,16 +12,18 @@ traversal(details,recordDetails)::=<<
 $if(recordDetails.debug)$//$recordDetails$
 //$details$
 $endif$
- $details: {x | ITraversal<$recordDetails.className$,$x.classAtEnd.string$> $x.name$=
- $firstPath(x.path)$ ;$\n$}$
+ $details: {x | ITraversal<$recordDetails.className$,$x.classAtEnd.className$> $x.name$ = $firstPath(x.path)$ ;$\n$}$
 >>
 recordOptic(details,allRecordsAndFields) ::= <<
 package $details.packageName$;
+
 import java.util.List;
 import one.xingyi.optics.ITraversal;
 import one.xingyi.optics.annotations.processors.IGeneratedOptics;
 import one.xingyi.optics.ILens;
-$details.fieldDetails: {x | import $x.fieldType.string$;$\n$}$
+$details.fieldDetails: {x |import $x.fieldType.string$;$\n$}$
+$details.traversalDetails:{td|$td.path:{p|import $p.main.string$Optics;$\n$}$}$
+$details.traversalDetails: {td |import $td.classAtEnd.string$;$\n$}$
 
 public interface $details.className$Optics extends IGeneratedOptics<$details.className$> {
  $details.fieldDetails: {x | ILens<$details.className$,$x.fieldType.shortName$> $x.name$L =

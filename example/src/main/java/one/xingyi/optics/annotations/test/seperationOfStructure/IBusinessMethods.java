@@ -3,7 +3,7 @@ package one.xingyi.optics.annotations.test.seperationOfStructure;
 import java.util.List;
 import java.util.function.Predicate;
 
-public interface IBuisnessMethods {
+public interface IBusinessMethods {
     List<String> getPfIdsFor(List<Commande> commandes);
 
     List<String> getPfIdsForWhere(List<Commande> commandes, Predicate<ChassisTroncon> where);

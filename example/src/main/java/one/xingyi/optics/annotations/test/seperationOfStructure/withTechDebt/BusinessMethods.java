@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class BusinessMethods implements IBuisnessMethods {
+public class BusinessMethods implements IBusinessMethods {
     public List<String> getPfIdsFor(List<Commande> commandes) {
         var result = new ArrayList<String>();
         for (Commande commande : commandes) {
