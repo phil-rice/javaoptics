@@ -27,7 +27,7 @@ $details.traversalDetails: {td |import $td.classAtEnd.string$;$\n$}$
 
 public interface $details.className$Optics extends IGeneratedOptics<$details.className$> {
  $details.fieldDetails: {x | ILens<$details.className$,$x.fieldType.shortName$> $x.name$L =
-   ILens.of($details.className$::$x.name$,$x.setter$);$\n$}$
+   ILens.of($details.className$::$x.getter$,$x.setter$);$\n$}$
  $details.fieldDetails: {x | $if(x.containedFieldType)$ ITraversal<$details.className$, $x.containedFieldType.shortName$> $x.name$T =
    ITraversal.from$x.simpleCollectionType.className$Lens($x.name$L);$\n$$endif$}$
  $if(details.addListTraversal)$ ITraversal<List<$details.className$>,$details.className$> listT=ITraversal.listTraversal();$endif$

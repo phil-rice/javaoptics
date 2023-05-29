@@ -62,33 +62,33 @@ public class Processor extends AbstractProcessor {
         return false;
     }
 
-    public PackageAndClass opticsClassName(RecordOpticsWithTraversals details) {
+    public PackageAndClass opticsClassName(ClassOpticsWithTraversals details) {
         return new PackageAndClass(null, details.getPackageName(), details.getClassName() + "Optics");
     }
 
-    Stream<RecordOpticsDetails> fromAnnotation(RoundEnvironment roundEnv, TypeElement annotation) {
+    Stream<ClassOpticsDetails> fromAnnotation(RoundEnvironment roundEnv, TypeElement annotation) {
         annotation.getTypeParameters().forEach(t -> log("Type parameter " + t));
-        return roundEnv.getElementsAnnotatedWith(annotation).stream().map(RecordOpticsDetails.fromElement(this::log));
+        return roundEnv.getElementsAnnotatedWith(annotation).stream().map(ClassOpticsDetails.makeDetailFromElement(this::log));
     }
 
     private void processOpticsAnnotation(RoundEnvironment roundEnv, TypeElement annotation) throws IOException {
-        List<RecordOpticsDetails> recordOpticsDetails = fromAnnotation(roundEnv, annotation).toList();
-        for (var rop : recordOpticsDetails) {
+        List<ClassOpticsDetails> classOpticsDetails = fromAnnotation(roundEnv, annotation).toList();
+        for (var rop : classOpticsDetails) {
             var recorded = new RecordedTraversals(rop.isDebug(), rop.getFieldDetails().stream().filter(f -> f.containedFieldType != null)
                     .map(f -> new NameAndType(f.name, f.getContainedFieldType())).toList());
             store.store(WithDebug.of(rop.getPackageAndClass(), rop.isDebug()), recorded);
         }
 
-        List<RecordOpticsWithTraversals> traversals = Utils.map(recordOpticsDetails, rod -> {
+        List<ClassOpticsWithTraversals> traversals = Utils.map(classOpticsDetails, rod -> {
             if (rod.isDebug()) log("Processing " + rod);
-            var withTraversals = RecordOpticsWithTraversals.from(store, rod, this::log);
+            var withTraversals = ClassOpticsWithTraversals.from(store, rod, this::log);
             if (rod.isDebug()) log("  --  " + withTraversals);
             return withTraversals;
         });
-        Utils.map(traversals, this::makeRecordOpticsFileDefn).forEach(this::makeSourceFile);
+        Utils.map(traversals, this::makeClassOpticsFileDefn).forEach(this::makeSourceFile);
     }
 
-    private FileDefn makeRecordOpticsFileDefn(RecordOpticsWithTraversals d) {
+    private FileDefn makeClassOpticsFileDefn(ClassOpticsWithTraversals d) {
         String rendered = render(d, "recordOptic");
 
         var className = opticsClassName(d);
@@ -120,7 +120,7 @@ public class Processor extends AbstractProcessor {
         }
     }
 
-    String render(RecordOpticsWithTraversals details, String templateName) {
+    String render(ClassOpticsWithTraversals details, String templateName) {
         var record = stringTemplate.getInstanceOf(templateName);
         record.add("details", details);
         return record.render();

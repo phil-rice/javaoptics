@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Getter
 @ToString
 @RequiredArgsConstructor
-public class RecordOpticsWithTraversals {
+public class ClassOpticsWithTraversals {
     private final String packageName;
     private final String className;
     private final boolean addListTraversal;
@@ -24,9 +24,9 @@ public class RecordOpticsWithTraversals {
     private final List<TraversalWithFullDetails> traversalDetails;
     private final boolean debug;
 
-    public static RecordOpticsWithTraversals from(IAnnotationProcessorLoader<WithDebug<PackageAndClass>, RecordedTraversals> store, RecordOpticsDetails details, Consumer<String> log) throws IOException {
+    public static ClassOpticsWithTraversals from(IAnnotationProcessorLoader<WithDebug<PackageAndClass>, RecordedTraversals> store, ClassOpticsDetails details, Consumer<String> log) throws IOException {
         List<TraversalWithFullDetails> tds = Utils.map(details.getTraversalDetails(), td -> TraversalWithFullDetails.from(details, td, store, log));
-        return new RecordOpticsWithTraversals(details.getPackageName(), details.getClassName(), details.isAddListTraversal(), details.getFieldDetails(),
+        return new ClassOpticsWithTraversals(details.getPackageName(), details.getClassName(), details.isAddListTraversal(), details.getFieldDetails(),
                 tds, details.isDebug());
     }
 
@@ -42,7 +42,7 @@ class TraversalWithFullDetails {
     public PackageAndClass getClassAtEnd(){
         return path.get(path.size()-1).field.getFieldType();
     }
-    static TraversalWithFullDetails from(RecordOpticsDetails recordDetails, TraversalDetails details, IAnnotationProcessorLoader<WithDebug<PackageAndClass>, RecordedTraversals> store, Consumer<String> log) throws IOException {
+    static TraversalWithFullDetails from(ClassOpticsDetails recordDetails, TraversalDetails details, IAnnotationProcessorLoader<WithDebug<PackageAndClass>, RecordedTraversals> store, Consumer<String> log) throws IOException {
         var debug = recordDetails.isDebug();
         var path = details.path();
         if (path.size() == 0) throw new RuntimeException("No traversals for " + recordDetails.getClassName());
