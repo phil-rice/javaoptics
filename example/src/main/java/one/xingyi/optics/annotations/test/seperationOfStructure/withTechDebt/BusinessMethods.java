@@ -59,8 +59,8 @@ public class BusinessMethods implements IBusinessMethods {
         }
     }
 
-    public void doSomethingForList(List<Commande> commandeList) {
-        for (Commande commande : commandeList)
+    public void doSomethingForList(List<Commande> commandes) {
+        for (Commande commande : commandes)
             for (CommandeTransport commandeTransport : commande.commandeTransportList()) {
                 for (TronconTransport tronconTransport : commandeTransport.tronconTransportList()) {
                     for (ChassisTroncon troncon : tronconTransport.chassisTronconList()) {

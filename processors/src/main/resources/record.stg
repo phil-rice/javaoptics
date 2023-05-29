@@ -14,14 +14,14 @@ $if(recordDetails.debug)$//$recordDetails$
 $endif$
  $details: {x | ITraversal<$recordDetails.className$,$x.classAtEnd.className$> $x.name$ = $firstPath(x.path)$ ;$\n$}$
 >>
-recordOptic(details,allRecordsAndFields) ::= <<
+recordOptic(details) ::= <<
 package $details.packageName$;
 
 import java.util.List;
 import one.xingyi.optics.ITraversal;
 import one.xingyi.optics.annotations.processors.IGeneratedOptics;
 import one.xingyi.optics.ILens;
-$details.fieldDetails: {x |import $x.fieldType.string$;$\n$}$
+$details.fieldDetails: {fd |import $fd.fieldType.string$;$\n$}$
 $details.traversalDetails:{td|$td.path:{p|import $p.main.string$Optics;$\n$}$}$
 $details.traversalDetails: {td |import $td.classAtEnd.string$;$\n$}$
 

@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface ITraversal<Main, Child> extends IFold<Main, Child> {
+    Main modify(Main main, Function<Child, Child> fn);
+
     static <Main, Child> ITraversal<Main, Child> of(Function<Main, Stream<Child>> allFn,
                                                     BiFunction<Main, Function<Child, Child>, Main> modifyFn) {
         return new Traversal<>(allFn, modifyFn);
@@ -30,7 +32,6 @@ public interface ITraversal<Main, Child> extends IFold<Main, Child> {
         return new Traversal<>(lens::get, (main, fn) -> lens.set(main, lens.get(main).map(fn)));
     }
 
-    Main modify(Main main, Function<Child, Child> fn);
 
     <GrandChild> ITraversal<Main, GrandChild> andThen(ITraversal<Child, GrandChild> t);
 

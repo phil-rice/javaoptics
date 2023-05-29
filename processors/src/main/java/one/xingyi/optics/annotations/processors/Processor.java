@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-@SupportedAnnotationTypes("one.xingyi.optics.annotations.Optics")
+@SupportedAnnotationTypes({"one.xingyi.optics.annotations.Optics"})
 @SupportedSourceVersion(SourceVersion.RELEASE_16)
 public class Processor extends AbstractProcessor {
 
@@ -121,10 +121,8 @@ public class Processor extends AbstractProcessor {
     }
 
     String render(RecordOpticsWithTraversals details, String templateName) {
-        List<TraversalPathPart> allRecordsAndFields = details.getTraversalDetails().stream().flatMap(td -> td.getPath().stream()).distinct().toList();
         var record = stringTemplate.getInstanceOf(templateName);
         record.add("details", details);
-        record.add("allRecordsAndFields", allRecordsAndFields);
         return record.render();
     }
 

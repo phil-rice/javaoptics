@@ -4,6 +4,6 @@ import one.xingyi.optics.annotations.Optics;
 
 import java.util.List;
 
-@Optics
-public record Ship(List<Container> containers) {
+@Optics(addListTraversal = true)
+public record Ship(List<Container> containers, List<Wagon> wagons, List<ChassisTroncon> trancons) {
 }

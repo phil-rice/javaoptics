@@ -15,7 +15,6 @@ public interface IFold<Main, Child> {
 
     IFold<Main, Child> filter(Predicate<Child> p);
 
-
 }
 
 abstract class AbstractFold<Main, Child> implements IFold<Main, Child> {

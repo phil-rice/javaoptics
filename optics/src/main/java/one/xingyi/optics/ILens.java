@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public interface ILens<Main, Child> extends ITraversal<Main, Child> {
+public interface ILens<Main, Child> extends IOptional<Main, Child> {
 
     static <Main, Child> ILens<Main, Child> of(Function<Main, Child> getFn, BiFunction<Main, Child, Main> setFn) {
         return new Lens<>(getFn, setFn);
