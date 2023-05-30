@@ -50,7 +50,7 @@ class TraversalWithFullDetails {
         var rest = path.subList(1, path.size());
         Optional<ViewFieldDetails> firstField = recordDetails.getFieldDetails().stream().filter(fd -> fd.name.equals(first)).findFirst();
         if (firstField.isEmpty())
-            throw new RuntimeException("Could not find " + first + " in " + recordDetails.getClassName());
+            throw new RuntimeException("Could not find field" + first + " in the class " + recordDetails.getCanonicalName());
         var firstPart = new TraversalPathPart(recordDetails.getPackageAndClass(), new NameAndType(firstField.get().name, firstField.get().containedFieldType));
 
         List<TraversalPathPart> tds = Utils.foldLeft(rest, List.of(firstPart), (acc, v) -> {

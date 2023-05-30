@@ -5,7 +5,7 @@
 * Iso
 * Traversal
 * Fold
-* Prism
+
 
 # Annotation Processor that automatically generates the optics for simple records
 
