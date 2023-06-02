@@ -18,3 +18,15 @@ record GrandChildForTest(String name) {
         return new GrandChildForTest(name);
     }
 }
+
+@Optics
+record State(DataA a, DataB b) {
+}
+
+@Optics
+record DataA(String a1, String a2) {
+}
+
+@Optics
+record DataB(String b1, String b2) {
+}

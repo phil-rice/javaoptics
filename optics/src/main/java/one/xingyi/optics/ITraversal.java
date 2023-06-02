@@ -1,5 +1,7 @@
 package one.xingyi.optics;
 
+import one.xingyi.tuples.Tuple2;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -35,7 +37,11 @@ public interface ITraversal<Main, Child> extends IFold<Main, Child> {
 
     <GrandChild> ITraversal<Main, GrandChild> andThen(ITraversal<Child, GrandChild> t);
 
-    <GrandChild> ITraversal<Main, GrandChild> chain(IOptional<Child, GrandChild> t);
+    <GrandChild> ITraversal<Main, GrandChild> chainTraversal(IOptional<Child, GrandChild> t);
+
+    //Pretty sure this is not doable
+//    <Child2, Merged> ITraversal<Main, Merged> merge(ITraversal<Main, Child2> other, IISO<Tuple2<Child, Child2>, Merged> iso);
+
 
     ITraversal<Main, Child> filter(Predicate<Child> p);
 
@@ -57,17 +63,19 @@ abstract class AbstractTraversal<Main, Child> extends AbstractFold<Main, Child> 
     }
 
     @Override
-    public <GrandChild> ITraversal<Main, GrandChild> chain(IOptional<Child, GrandChild> t) {
+    public <GrandChild> ITraversal<Main, GrandChild> chainTraversal(IOptional<Child, GrandChild> t) {
         return new Traversal<>(
                 main -> all(main).flatMap(child -> t.optGet(child).stream()),
-                (main, fn) -> modify(main, child -> t.optGet(child).map(fn).map(grandChild -> t.optSet(child, grandChild)).orElse(child))
+                (main, fn) -> modify(main, child -> t.optGet(child).map(fn).flatMap(grandChild -> t.optSet(child, grandChild)).orElse(child))
         );
     }
+
 
     @Override
     public void forEach(Main main, Consumer<Child> fn) {
         all(main).forEach(fn);
     }
+
 }
 
 class Traversal<Main, Child> extends AbstractTraversal<Main, Child> implements ITraversal<Main, Child> {

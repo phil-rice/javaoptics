@@ -1,10 +1,16 @@
 package one.xingyi.optics;
 
+import one.xingyi.tuples.Tuple2;
+
 import java.util.function.Function;
 
 public interface IISO<Main, Child> extends ILens<Main, Child> {
     static <Main, Child> IISO<Main, Child> of(Function<Main, Child> get, Function<Child, Main> reverseGet) {
         return new Iso<>(get, reverseGet);
+    }
+
+    static <T> IISO<T, T> identity() {
+        return new Iso<>(t -> t, t -> t);
     }
 
     Child get(Main main);
@@ -27,6 +33,15 @@ abstract class AbstractIso<Main, Child> extends AbstractLens<Main, Child> implem
                 main -> t.get(get(main)),
                 grandChild -> reverseGet(t.reverseGet(grandChild))
         );
+    }
+
+    @Override
+    public <Merged, Child2> ILens<Main, Merged> merge(ILens<Main, Child2> other, IISO<Tuple2<Child, Child2>, Merged> iso) {
+        return new Lens<>(main -> iso.get(Tuple2.of(get(main), other.get(main))),
+                (main, merged) -> {
+                    Tuple2<Child, Child2> tuple2 = iso.reverseGet(merged);
+                    return set(other.set(main, tuple2.t2()), tuple2.t1());
+                });
     }
 }
 

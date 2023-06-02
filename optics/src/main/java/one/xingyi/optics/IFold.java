@@ -1,5 +1,8 @@
 package one.xingyi.optics;
 
+import one.xingyi.tuples.Tuple2;
+
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -15,6 +18,8 @@ public interface IFold<Main, Child> {
 
     IFold<Main, Child> filter(Predicate<Child> p);
 
+    <Child2, Merged> IFold<Main, Merged> merge(IFold<Main, Child2> other, IISO<Tuple2<Child, Child2>, Merged> iso);
+
 }
 
 abstract class AbstractFold<Main, Child> implements IFold<Main, Child> {
@@ -24,6 +29,10 @@ abstract class AbstractFold<Main, Child> implements IFold<Main, Child> {
 
     public IFold<Main, Child> filter(Predicate<Child> p) {
         return new Fold<>(main -> this.all(main).filter(p));
+    }
+
+    public <Child2, Merged> IFold<Main, Merged> merge(IFold<Main, Child2> other, IISO<Tuple2<Child, Child2>, Merged> iso) {
+        return new Fold<>(main -> this.all(main).flatMap(child -> other.all(main).map(child2 -> iso.get(Tuple2.of(child, child2)))));
     }
 }
 

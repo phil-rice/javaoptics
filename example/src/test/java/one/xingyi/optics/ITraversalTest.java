@@ -27,7 +27,7 @@ public class ITraversalTest extends OpticsFixture {
     @Test
     public void testTraversalsWithLens() {
         assertEquals(List.of(List.of(grandChild0), List.of(grandChild1, grandChild2)),
-                MainForTestOptics.childrenT.<List<GrandChildForTest>>chain(ChildForTestOptics.grandChildrenL).all(mainWithTwoChildren).toList());
+                MainForTestOptics.childrenT.<List<GrandChildForTest>>chainTraversal(ChildForTestOptics.grandChildrenL).all(mainWithTwoChildren).toList());
     }
 
     @Test

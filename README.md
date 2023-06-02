@@ -58,5 +58,16 @@ public interface CommandeOptics extends IGeneratedOptics<Commande> {
 }
 ``` 
 
+# Known issues / Work in progress
+
+@Optics doesn't work on classes with generics yet
+
+For example the following DOES NOT WORK
+ 
+```java
+@Optics //does not work yet 
+public record Tuple<A, B>(A a, B b) {
+}
+```
 
     

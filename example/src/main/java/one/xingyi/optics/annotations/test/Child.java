@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import one.xingyi.optics.annotations.Optics;
 
-@Optics(debug = false)
+@Optics(debug = true)
 @RequiredArgsConstructor
 @Getter
 @ToString

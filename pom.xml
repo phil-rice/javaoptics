@@ -6,7 +6,7 @@
 
   <groupId>one.xingyi</groupId>
   <artifactId>parent</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
+  <version>0.0.4</version>
   <packaging>pom</packaging>
   <name>javaOptics</name>
   <description>Tools for handling immutability in Java using optics</description>
@@ -32,7 +32,7 @@
   <modules>
     <module>processors</module>
     <module>optics</module>
-    <module>example</module>
+<!--    <module>example</module>-->
   </modules>
 
   <properties>
@@ -45,12 +45,12 @@
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>optics</artifactId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.4</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>processors</artifactId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.4</version>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>
@@ -103,13 +103,6 @@
           <mavenExecutorId>forked-path</mavenExecutorId>
           <!--<arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>-->
         </configuration>
-        <!--        <dependencies>-->
-        <!--          <dependency>-->
-        <!--            <groupId>org.apache.maven.scm</groupId>-->
-        <!--            <artifactId>maven-scm-provider-gitexe</artifactId>-->
-        <!--            <version>1.9.5</version>-->
-        <!--          </dependency>-->
-        <!--        </dependencies>-->
       </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
@@ -190,7 +183,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-release-plugin</artifactId>
-            <version>2.5.3</version>
+            <version>3.0.0</version>
             <configuration>
               <localCheckout>true</localCheckout>
               <pushChanges>false</pushChanges>
@@ -208,7 +201,7 @@
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.7</version>
+            <version>1.6.13</version>
             <extensions>true</extensions>
             <configuration>
               <serverId>ossrh</serverId>
@@ -219,7 +212,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-
             <executions>
               <execution>
                 <id>sign-artifacts</id>
