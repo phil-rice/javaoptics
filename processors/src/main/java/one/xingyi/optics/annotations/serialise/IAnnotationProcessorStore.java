@@ -1,9 +1,6 @@
 package one.xingyi.optics.annotations.serialise;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import one.xingyi.optics.annotations.processors.PackageAndClass;
 import one.xingyi.optics.annotations.utils.IFunctionWithIoException;
 

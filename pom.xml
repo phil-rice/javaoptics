@@ -6,7 +6,7 @@
 
   <groupId>one.xingyi</groupId>
   <artifactId>parent</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.6</version>
   <packaging>pom</packaging>
   <name>javaOptics</name>
   <description>Tools for handling immutability in Java using optics</description>
@@ -36,8 +36,8 @@
   </modules>
 
   <properties>
-    <maven.compiler.source>16</maven.compiler.source>
-    <maven.compiler.target>16</maven.compiler.target>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencyManagement>
@@ -45,12 +45,12 @@
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>optics</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.6</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>processors</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.6</version>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>

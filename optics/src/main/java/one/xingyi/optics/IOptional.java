@@ -7,6 +7,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static one.xingyi.utils.StreamHelper.streamOf;
+
 public interface IOptional<Main, Child> extends ITraversal<Main, Child> {
     static <Main, Child> IOptional<Main, Child> of(Function<Main, Optional<Child>> optGetFn, BiFunction<Main, Child, Optional<Main>> optSetFn) {
         return new OptionalOptic<>(optGetFn, optSetFn);
@@ -25,7 +27,7 @@ abstract class AbstractOptional<Main, Child> extends AbstractTraversal<Main, Chi
     @Override
     public Stream<Child> all(Main main) {
         Optional<Child> opt = optGet(main);
-        return opt.stream();
+        return streamOf(opt);
     }
 
     @Override
@@ -48,7 +50,7 @@ abstract class AbstractOptional<Main, Child> extends AbstractTraversal<Main, Chi
                 main -> optGet(main).flatMap(child -> other.optGet(main).map(child2 -> iso.get(Tuple2.of(child, child2)))),
                 (main, merged) -> {
                     Tuple2<Child, Child2> t = iso.reverseGet(merged);
-                    return optSet(main, t.t1()).flatMap(newMain -> other.optSet(newMain, t.t2()));
+                    return optSet(main, t.t1).flatMap(newMain -> other.optSet(newMain, t.t2));
                 }
         );
     }

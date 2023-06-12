@@ -5,6 +5,8 @@ import one.xingyi.optics.annotations.utils.IFunctionWithIoException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public interface Utils {
@@ -14,7 +16,7 @@ public interface Utils {
     }
 
     static <T> List<T> asList(T[] ts) {
-        return ts == null ? List.of() : List.of(ts);
+        return ts == null ? Collections.emptyList() : Arrays.asList(ts);
     }
 
     static <T> List<T> concat(List<T> t1, List<T> t2) {

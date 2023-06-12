@@ -1,10 +1,8 @@
 package one.xingyi.optics.annotations.processors;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -16,21 +14,27 @@ public class PackageAndClass {
     private final PackageAndClass holdingClass;
     private final String packageName;
     private final String className;
-    public PackageAndClass mapClassName(Function<String,String> fn) {
+    public PackageAndClass mapClassName(Function<String, String> fn) {
         return new PackageAndClass(holdingClass, packageName, fn.apply(className));
     }
 
 
-    public static Map<String, PackageAndClass> primitives =
-            Map.of("int", new PackageAndClass(null, "java.lang", "Integer"),
-                    "long", new PackageAndClass(null, "java.lang", "Long"),
-                    "double", new PackageAndClass(null, "java.lang", "Double"),
-                    "boolean", new PackageAndClass(null, "java.lang", "Boolean"),
-                    "float", new PackageAndClass(null, "java.lang", "Float"),
-                    "char", new PackageAndClass(null, "java.lang", "Character"),
-                    "byte", new PackageAndClass(null, "java.lang", "Byte"),
-                    "short", new PackageAndClass(null, "java.lang", "Short"),
-                    "void", new PackageAndClass(null, "java.lang", "Void"));
+    public static Map<String, PackageAndClass> primitives = makePrimitives();
+
+    private static Map<String, PackageAndClass> makePrimitives() {
+        Map<String, PackageAndClass> result = new HashMap<>();
+        result.put("int", new PackageAndClass(null, "java.lang", "Integer"));
+        result.put("long", new PackageAndClass(null, "java.lang", "Long"));
+        result.put("double", new PackageAndClass(null, "java.lang", "Double"));
+        result.put("boolean", new PackageAndClass(null, "java.lang", "Boolean"));
+        result.put("float", new PackageAndClass(null, "java.lang", "Float"));
+        result.put("char", new PackageAndClass(null, "java.lang", "Character"));
+        result.put("byte", new PackageAndClass(null, "java.lang", "Byte"));
+        result.put("short", new PackageAndClass(null, "java.lang", "Short"));
+        result.put("void", new PackageAndClass(null, "java.lang", "Void"));
+        return result;
+    }
+
 
     public static PackageAndClass from(String fullName) {
         if (fullName == null) return null;
@@ -55,7 +59,7 @@ public class PackageAndClass {
 
 
     public String getShortName() {
-        return holdingClass != null ? holdingClass.getShortName() + "<" + className +">": className;
+        return holdingClass != null ? holdingClass.getShortName() + "<" + className + ">" : className;
     }
     public String getString() {
         return packageName + "." + className;

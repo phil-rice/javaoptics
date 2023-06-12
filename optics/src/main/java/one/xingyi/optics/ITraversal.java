@@ -8,7 +8,10 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static one.xingyi.utils.StreamHelper.streamOf;
 
 public interface ITraversal<Main, Child> extends IFold<Main, Child> {
     Main modify(Main main, Function<Child, Child> fn);
@@ -19,15 +22,15 @@ public interface ITraversal<Main, Child> extends IFold<Main, Child> {
     }
 
     static <T> ITraversal<List<T>, T> listTraversal() {
-        return new Traversal<>(List::stream, (list, fn) -> list.stream().map(fn).toList());
+        return new Traversal<>(List::stream, (list, fn) -> list.stream().map(fn).collect(Collectors.toList()));
     }
 
     static <Main, Child> ITraversal<Main, Child> fromListLens(ILens<Main, List<Child>> lens) {
-        return new Traversal<>(main -> lens.get(main).stream(), (main, fn) -> lens.set(main, lens.get(main).stream().map(fn).toList()));
+        return new Traversal<>(main -> lens.get(main).stream(), (main, fn) -> lens.set(main, lens.get(main).stream().map(fn).collect(Collectors.toList())));
     }
 
     static <Main, Child> ITraversal<Main, Child> fromCollectionLens(ILens<Main, Collection<Child>> lens) {
-        return new Traversal<>(main -> lens.get(main).stream(), (main, fn) -> lens.set(main, lens.get(main).stream().map(fn).toList()));
+        return new Traversal<>(main -> lens.get(main).stream(), (main, fn) -> lens.set(main, lens.get(main).stream().map(fn).collect(Collectors.toList())));
     }
 
     static <Main, Child> ITraversal<Main, Child> fromStreamLens(ILens<Main, Stream<Child>> lens) {
@@ -64,8 +67,9 @@ abstract class AbstractTraversal<Main, Child> extends AbstractFold<Main, Child> 
 
     @Override
     public <GrandChild> ITraversal<Main, GrandChild> chainTraversal(IOptional<Child, GrandChild> t) {
+
         return new Traversal<>(
-                main -> all(main).flatMap(child -> t.optGet(child).stream()),
+                main -> all(main).flatMap(child -> streamOf(t.optGet(child))),
                 (main, fn) -> modify(main, child -> t.optGet(child).map(fn).flatMap(grandChild -> t.optSet(child, grandChild)).orElse(child))
         );
     }

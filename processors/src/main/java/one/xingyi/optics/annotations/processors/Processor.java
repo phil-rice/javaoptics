@@ -1,5 +1,6 @@
 package one.xingyi.optics.annotations.processors;
 
+import lombok.var;
 import one.xingyi.optics.annotations.Optics;
 import one.xingyi.optics.annotations.serialise.IAnnotationProcessorStore;
 import org.stringtemplate.v4.STGroupFile;
@@ -14,10 +15,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SupportedAnnotationTypes({"one.xingyi.optics.annotations.Optics"})
-@SupportedSourceVersion(SourceVersion.RELEASE_16)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class Processor extends AbstractProcessor {
 
     private Messager messager;
@@ -40,8 +42,8 @@ public class Processor extends AbstractProcessor {
 
         log("Init  Optics annotations");
         stringTemplate = new STGroupFile("record.stg");
-        this.store = IAnnotationProcessorStore.<WithDebug<PackageAndClass>, RecordedTraversals>defaultStore(filer, WithDebug::t, "optics",
-                RecordedTraversals.parse, RecordedTraversals.printer, this::log, WithDebug::debug);
+        this.store = IAnnotationProcessorStore.<WithDebug<PackageAndClass>, RecordedTraversals>defaultStore(filer, WithDebug::getT, "optics",
+                RecordedTraversals.parse, RecordedTraversals.printer, this::log, WithDebug::isDebug);
     }
 
 
@@ -72,10 +74,10 @@ public class Processor extends AbstractProcessor {
     }
 
     private void processOpticsAnnotation(RoundEnvironment roundEnv, TypeElement annotation) throws IOException {
-        List<ClassOpticsDetails> classOpticsDetails = fromAnnotation(roundEnv, annotation).toList();
+        List<ClassOpticsDetails> classOpticsDetails = fromAnnotation(roundEnv, annotation).collect(Collectors.toList());
         for (var rop : classOpticsDetails) {
             var recorded = new RecordedTraversals(rop.isDebug(), rop.getFieldDetails().stream().filter(f -> f.containedFieldType != null)
-                    .map(f -> new NameAndType(f.name, f.getContainedFieldType())).toList());
+                    .map(f -> new NameAndType(f.name, f.getContainedFieldType())).collect(Collectors.toList()));
             store.store(WithDebug.of(rop.getPackageAndClass(), rop.isDebug()), recorded);
         }
 
@@ -97,11 +99,11 @@ public class Processor extends AbstractProcessor {
 
     private void makeSourceFile(FileDefn fileDefn) {
         try {
-            String sourceFile = fileDefn.clazz().getString();
+            String sourceFile = fileDefn.clazz.getString();
 //            log("Making source file " + sourceFile);
             JavaFileObject builderFile = filer.createSourceFile(sourceFile);
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-                out.println(fileDefn.content());
+                out.println(fileDefn.content);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -111,9 +113,9 @@ public class Processor extends AbstractProcessor {
     private void makeRecordFile(FileDefn fileDefn) {
         try {
             FileObject builderFile = filer.createResource(StandardLocation.SOURCE_OUTPUT,
-                    fileDefn.clazz().getPackageName(), fileDefn.clazz().getClassName());
+                    fileDefn.clazz.getPackageName(), fileDefn.clazz.getClassName());
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-                out.println(fileDefn.content());
+                out.println(fileDefn.content);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

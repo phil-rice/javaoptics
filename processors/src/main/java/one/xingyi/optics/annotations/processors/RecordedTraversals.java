@@ -1,9 +1,6 @@
 package one.xingyi.optics.annotations.processors;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +9,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public record RecordedTraversals(boolean debug, List<NameAndType> classAndFields) {
+@RequiredArgsConstructor
+@EqualsAndHashCode
+@Getter
+@ToString
+public class RecordedTraversals {
+    public final boolean debug;
+    public final List<NameAndType> classAndFields;
     static BiFunction<WithDebug<PackageAndClass>, String, RecordedTraversals> parse = (from, s) -> {
         var lines = s.split("\n");
         var namesAndTypes = Arrays.stream(lines).map(String::trim).filter(s1 -> !s1.isEmpty()).
@@ -21,8 +24,8 @@ public record RecordedTraversals(boolean debug, List<NameAndType> classAndFields
                     String packageAndClass = Utils.lastPart(line, ":", null);
                     if (name == null || packageAndClass == null) return Stream.empty();
                     return Stream.of(new NameAndType(name, PackageAndClass.from(packageAndClass)));
-                }).toList();
-        return new RecordedTraversals(from.debug(), namesAndTypes);
+                }).collect(Collectors.toList());
+        return new RecordedTraversals(from.debug, namesAndTypes);
 
     };
 
@@ -35,7 +38,7 @@ public record RecordedTraversals(boolean debug, List<NameAndType> classAndFields
 @Getter
 @ToString
 @RequiredArgsConstructor
-class NameAndType{
+class NameAndType {
     private final String fieldName;
     private final PackageAndClass fieldType;
     String getString() {

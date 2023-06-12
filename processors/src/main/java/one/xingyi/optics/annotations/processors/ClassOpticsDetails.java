@@ -1,9 +1,6 @@
 package one.xingyi.optics.annotations.processors;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import one.xingyi.optics.annotations.Optics;
 
 import javax.lang.model.element.Element;
@@ -11,11 +8,14 @@ import javax.lang.model.element.ElementKind;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static javax.lang.model.element.ElementKind.*;
+import static javax.lang.model.element.ElementKind.CLASS;
+import static javax.lang.model.element.ElementKind.FIELD;
 
 @EqualsAndHashCode
 @Getter
@@ -45,18 +45,19 @@ public final class ClassOpticsDetails {
 
 
     static ClassOpticsDetails fromFieldDetails(String packageName, String className, boolean addListTraversal, List<FieldDetails> fieldDetails, List<TraversalDetails> traversalDetails, boolean debug) {
-        return new ClassOpticsDetails(packageName, className, addListTraversal, fieldDetails.stream().map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).toList(), traversalDetails, debug);
+        return new ClassOpticsDetails(packageName, className, addListTraversal, fieldDetails.stream()
+                .map(fd -> ViewFieldDetails.oneForRecord(className, fieldDetails, fd)).collect(Collectors.toList()), traversalDetails, debug);
     }
 
     static ElementKind selectFieldType(Consumer<String> log, Element element) {
-        if (element.getKind().equals(RECORD)) return RECORD_COMPONENT;
+        if (element.getKind().toString().equals("RECORD")) return ElementKind.valueOf("RECORD_COMPONENT");
         if (element.getKind().equals(CLASS)) return FIELD;
 //        log.accept("Optics " + element + " is not a record or a class. Kind is " + element.getKind());
         throw new RuntimeException("Optics " + element + " is not a record or a class. Kind is " + element.getKind());
     }
 
     static Function<String, String> getterFn(Element element) {
-        if (element.getKind().equals(RECORD)) return Function.identity();
+        if (element.getKind().toString().equals("RECORD")) return Function.identity();
         if (element.getKind().equals(CLASS)) return s -> "get" + s.substring(0, 1).toUpperCase() + s.substring(1);
 //        log.accept("Optics " + element + " is not a record or a class. Kind is " + element.getKind());
         throw new RuntimeException("Optics " + element + " is not a record or a class. Kind is " + element.getKind());
@@ -70,14 +71,15 @@ public final class ClassOpticsDetails {
                 log.accept("Optics - Found " + element + " of kind" + element.getKind() + " with annotation " + annotation);
 
             ElementKind fieldKind = selectFieldType(log, element);
-            List<TraversalDetails> traversals = Arrays.stream(annotation.traversals()).map(TraversalDetails::fromPath).toList();
+            List<TraversalDetails> traversals = Arrays.stream(annotation.traversals()).map(TraversalDetails::fromPath).collect(Collectors.toList());
             var pckElement = element.getEnclosingElement();
             if (!pckElement.getKind().toString().equals("PACKAGE"))
                 throw new RuntimeException("Expected package for " + element + " but got " + pckElement.getKind());
             var pckName = pckElement.toString();
             var className = element.getSimpleName().toString();
+            log.accept("fieldKind" + fieldKind + " And enclosed " + element.getEnclosedElements().stream().map(e -> e.getKind() + " " + e).collect(Collectors.joining(",")));
             List<FieldDetails> fieldDetails = element.getEnclosedElements().stream().filter(e -> e.getKind().equals(fieldKind))
-                    .map(ClassOpticsDetails.makeFieldDetailsFromElement(getterFn(element))).toList();
+                    .map(ClassOpticsDetails.makeFieldDetailsFromElement(getterFn(element))).collect(Collectors.toList());
             return fromFieldDetails(pckName, className, annotation.addListTraversal(), fieldDetails, traversals, debug);
         };
     }
@@ -128,13 +130,17 @@ class ViewFieldDetails {
 
 
     public static ViewFieldDetails oneForRecord(String className, List<FieldDetails> fds, FieldDetails fd) {
-        var setterParts = fds.stream().map(f -> f == fd ? "value" : "main." + f.getter + "()").toList();
+        var setterParts = fds.stream().map(f -> f == fd ? "value" : "main." + f.getter + "()").collect(Collectors.toList());
         var setter = "(main,value)->new " + className + "(" + String.join(",", setterParts) + ")";
         return new ViewFieldDetails(fd.getFieldType(), fd.getSimpleCollectionType(), fd.getContainedFieldType(), fd.getName(), setter, fd.getter);
     }
 }
 
-record TraversalDetails(String name, List<String> path) {
+@RequiredArgsConstructor
+@ToString
+class TraversalDetails {
+    public final String name;
+    public final List<String> path;
     public static TraversalDetails fromPath(String path) {
         var defName = path.replace('.', '_') + "T";
         var name = Utils.firstPart(path, ":", defName);

@@ -82,7 +82,7 @@ final class Lens<Main, Child> extends AbstractLens<Main, Child> implements ILens
         return new Lens<>(main -> iso.get(Tuple2.of(get(main), other.get(main))),
                 (main, merged) -> {
                     Tuple2<Child, Child2> tuple2 = iso.reverseGet(merged);
-                    return set.apply(other.set(main, tuple2.t2()), tuple2.t1());
+                    return set.apply(other.set(main, tuple2.t2), tuple2.t1);
                 });
     }
 }
