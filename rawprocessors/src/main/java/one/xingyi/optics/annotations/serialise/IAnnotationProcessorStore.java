@@ -2,7 +2,7 @@ package one.xingyi.optics.annotations.serialise;
 
 import lombok.*;
 import one.xingyi.optics.annotations.processors.PackageAndClass;
-import one.xingyi.optics.annotations.utils.IFunctionWithIoException;
+import one.xingyi.optics.annotations.interfaces.IFunctionWithException;
 
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface IAnnotationProcessorStore<From, To> extends IAnnotationProcessorLoader<From, To>, IAnnotationProcessorStorer<From, To> {
-    static IFunctionWithIoException<PackageAndClass, FileObject> classNameToFileObjectForExtension(Filer filer, String extension) {
+    static IFunctionWithException<PackageAndClass, FileObject> classNameToFileObjectForExtension(Filer filer, String extension) {
         return pckAndClass -> filer.createResource(StandardLocation.SOURCE_OUTPUT, pckAndClass.getPackageName() + ".storeFor" + extension, pckAndClass.getClassName() + "." + extension);
     }
 

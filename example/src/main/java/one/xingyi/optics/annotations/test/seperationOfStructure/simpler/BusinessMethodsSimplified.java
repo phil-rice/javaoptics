@@ -13,7 +13,7 @@ public class BusinessMethodsSimplified {
         traversal.all(t).forEach(IMeansOfTransport::doSomething);
     }
 
-    public <T> void doSomethingElse(ITraversal<T, IMeansOfTransport> traversal, T t) {
+    public <T> void doSomethingElse(ITraversal<T, IMeansOfTransport> traversal, T t) throws Exception {
         traversal.forEach(t, IMeansOfTransport::doSomething);
     }
 

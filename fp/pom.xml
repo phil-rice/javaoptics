@@ -9,13 +9,12 @@
     <version>1.0.5</version>
   </parent>
 
-  <artifactId>optics</artifactId>
+  <artifactId>fp</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>one.xingyi</groupId>
-      <artifactId>fp</artifactId>
-    </dependency>
-  </dependencies>
+      <artifactId>interfaces</artifactId>
+    </dependency></dependencies>
 
 </project>

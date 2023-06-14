@@ -1,7 +1,11 @@
 package one.xingyi.optics;
 
+import one.xingyi.fp.StreamComprehensionsForExceptions;
+import one.xingyi.interfaces.ConsumerWithException;
+import one.xingyi.interfaces.FunctionWithException;
 import one.xingyi.tuples.Tuple2;
 
+import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -16,8 +20,12 @@ public interface IFold<Main, Child> {
 
     <GrandChild> IFold<Main, GrandChild> chainFold(IFold<Child, GrandChild> t);
 
+    void forEach(Main main, ConsumerWithException<Child> consumer) throws Exception;
+
     IFold<Main, Child> filter(Predicate<Child> p);
 
+    IFold<Main, Child> unique();
+    <T> IFold<Main, T> map(Function<Child, T> fn) ;
     <Child2, Merged> IFold<Main, Merged> merge(IFold<Main, Child2> other, IISO<Tuple2<Child, Child2>, Merged> iso);
 
 }
@@ -30,10 +38,23 @@ abstract class AbstractFold<Main, Child> implements IFold<Main, Child> {
     public IFold<Main, Child> filter(Predicate<Child> p) {
         return new Fold<>(main -> this.all(main).filter(p));
     }
-
+    @Override
+    public <T> IFold<Main, T> map(Function<Child, T> fn) {
+        return new Fold<Main, T>(main -> this.all(main).map(fn));
+    }
     public <Child2, Merged> IFold<Main, Merged> merge(IFold<Main, Child2> other, IISO<Tuple2<Child, Child2>, Merged> iso) {
         return new Fold<>(main -> this.all(main).flatMap(child -> other.all(main).map(child2 -> iso.get(Tuple2.of(child, child2)))));
     }
+    @Override
+    public void forEach(Main main, ConsumerWithException<Child> consumer) throws Exception {
+        for (Iterator<Child> iterator = all(main).iterator(); iterator.hasNext(); )
+            consumer.accept(iterator.next());
+    }
+    @Override
+    public IFold<Main, Child> unique() {
+        return IFold.of(main -> all(main).distinct());
+    }
+
 }
 
 class Fold<Main, Child> extends AbstractFold<Main, Child> implements IFold<Main, Child> {

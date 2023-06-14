@@ -8,14 +8,6 @@
     <artifactId>parent</artifactId>
     <version>1.0.5</version>
   </parent>
-
-  <artifactId>optics</artifactId>
-
-  <dependencies>
-    <dependency>
-      <groupId>one.xingyi</groupId>
-      <artifactId>fp</artifactId>
-    </dependency>
-  </dependencies>
+  <artifactId>interfaces</artifactId>
 
 </project>

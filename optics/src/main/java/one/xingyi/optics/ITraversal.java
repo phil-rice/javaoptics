@@ -1,5 +1,6 @@
 package one.xingyi.optics;
 
+import one.xingyi.interfaces.ConsumerWithException;
 import one.xingyi.tuples.Tuple2;
 
 import java.util.Collection;
@@ -11,6 +12,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static one.xingyi.fp.StreamComprehensionsForExceptions.forEachE;
 import static one.xingyi.utils.StreamHelper.streamOf;
 
 public interface ITraversal<Main, Child> extends IFold<Main, Child> {
@@ -48,7 +50,7 @@ public interface ITraversal<Main, Child> extends IFold<Main, Child> {
 
     ITraversal<Main, Child> filter(Predicate<Child> p);
 
-    void forEach(Main main, Consumer<Child> fn);
+    void forEach(Main main, ConsumerWithException<Child> fn) throws Exception;
 
 }
 
@@ -76,8 +78,8 @@ abstract class AbstractTraversal<Main, Child> extends AbstractFold<Main, Child> 
 
 
     @Override
-    public void forEach(Main main, Consumer<Child> fn) {
-        all(main).forEach(fn);
+    public void forEach(Main main, ConsumerWithException<Child> fn) throws Exception {
+        forEachE(all(main), fn);
     }
 
 }

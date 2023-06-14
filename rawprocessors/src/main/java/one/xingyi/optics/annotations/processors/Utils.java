@@ -1,7 +1,7 @@
 package one.xingyi.optics.annotations.processors;
 
-import one.xingyi.optics.annotations.utils.IBiFunctionWithIoException;
-import one.xingyi.optics.annotations.utils.IFunctionWithIoException;
+import one.xingyi.optics.annotations.interfaces.IBiFunctionWithException;
+import one.xingyi.optics.annotations.interfaces.IFunctionWithException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public interface Utils {
         return result;
     }
 
-    static <T, T1> List<T1> map(List<T> ts, IFunctionWithIoException<T, T1> fn) throws IOException {
+    static <T, T1> List<T1> map(List<T> ts, IFunctionWithException<T, T1> fn) throws IOException {
         List<T1> result = new ArrayList<>(ts.size());
         for (T t : ts) result.add(fn.apply(t));
         return result;
@@ -56,7 +56,7 @@ public interface Utils {
         return i == -1 ? def : s.substring(i + 1);
     }
 
-    static <Acc, V> Acc foldLeft(List<V> vs, Acc acc, IBiFunctionWithIoException<Acc, V, Acc> fn) throws IOException {
+    static <Acc, V> Acc foldLeft(List<V> vs, Acc acc, IBiFunctionWithException<Acc, V, Acc> fn) throws IOException {
         for (V v : vs) acc = fn.apply(acc, v);
         return acc;
     }

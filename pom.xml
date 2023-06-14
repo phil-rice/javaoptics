@@ -6,7 +6,7 @@
 
   <groupId>one.xingyi</groupId>
   <artifactId>parent</artifactId>
-  <version>0.0.6</version>
+  <version>1.0.5</version>
   <packaging>pom</packaging>
   <name>javaOptics</name>
   <description>Tools for handling immutability in Java using optics</description>
@@ -30,9 +30,11 @@
   </scm>
 
   <modules>
+    <module>interfaces</module>
+    <module>fp</module>
+    <module>rawprocessors</module>
     <module>processors</module>
     <module>optics</module>
-<!--    <module>example</module>-->
   </modules>
 
   <properties>
@@ -45,12 +47,27 @@
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>optics</artifactId>
-        <version>0.0.6</version>
+        <version>1.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>one.xingyi</groupId>
+        <artifactId>fp</artifactId>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>processors</artifactId>
-        <version>0.0.6</version>
+        <version>1.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>one.xingyi</groupId>
+        <artifactId>rawprocessors</artifactId>
+        <version>1.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>one.xingyi</groupId>
+        <artifactId>interfaces</artifactId>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>

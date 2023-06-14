@@ -7,14 +7,7 @@
 * Fold
 
 # Annotation Processor that automatically generates the optics for simple records
-
-This is a POC to see what the limitations are.
-
-It only works with Java records at the moment. A companion object is created which contains the optics. It contains
-lens for each field, and a traversal for fields that are list/collection or stream.
-
-There is an experimental feature to generate chained traversals, but unfortunately this is problematic with
-incremental compilation. A new approach would be needed to make this work.
+Not needed to use the library, but useful for generating the optics for simple records.
 
 ## @Optic annotation
 
@@ -63,7 +56,7 @@ public interface CommandeOptics extends IGeneratedOptics<Commande> {
 
 # Known issues / Work in progress
 
-@Optics doesn't work on classes with generics yet
+The automatic generated @Optics doesn't work on classes with generics yet
 
 For example the following DOES NOT WORK
 
@@ -79,5 +72,6 @@ public record Tuple<A, B>(A a, B b) {
 ```shell
 mvn versions:set "-DnewVersion=x.x.x"
 mvn clean deploy -P release
+mvn versions:set "-DnewVersion=x.y.y-SNAPSHOT"
 ```
 

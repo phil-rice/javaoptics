@@ -2,7 +2,7 @@ package one.xingyi.optics.annotations.serialise;
 
 import lombok.*;
 import one.xingyi.optics.annotations.processors.PackageAndClass;
-import one.xingyi.optics.annotations.utils.IFunctionWithIoException;
+import one.xingyi.optics.annotations.interfaces.IFunctionWithException;
 
 import javax.tools.FileObject;
 import java.io.BufferedReader;
@@ -28,7 +28,7 @@ public interface IAnnotationProcessorLoader<From, To> {
 class AnnotationProcessorLoader<From, T> implements IAnnotationProcessorLoader<From, T> {
 
     private final Function<From, PackageAndClass> fromToClassName;
-    private final IFunctionWithIoException<PackageAndClass, FileObject> classNameToFileObject;
+    private final IFunctionWithException<PackageAndClass, FileObject> classNameToFileObject;
     private final BiFunction<From, String, T> parser;
 
 
