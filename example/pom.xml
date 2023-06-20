@@ -6,14 +6,14 @@
   <parent>
     <groupId>one.xingyi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.0.6</version>
+    <version>1.0.7-SNAPSHOT</version>
   </parent>
   <artifactId>example</artifactId>
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <xingyi.version>1.0.5-SNAPSHOT</xingyi.version>
+    <xingyi.version>1.0.7-SNAPSHOT</xingyi.version>
   </properties>
   <dependencies>
     <dependency>

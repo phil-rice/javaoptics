@@ -1,14 +1,18 @@
 package one.xingyi.optics;
 
+import lombok.var;
 import one.xingyi.fp.StreamComprehensionsForExceptions;
 import one.xingyi.interfaces.ConsumerWithException;
 import one.xingyi.interfaces.FunctionWithException;
 import one.xingyi.tuples.Tuple2;
+import one.xingyi.utils.StreamHelper;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface IFold<Main, Child> {
@@ -16,16 +20,20 @@ public interface IFold<Main, Child> {
         return new Fold<>(allFn);
     }
 
+    static <T> IFold<Collection<T>, T> collectionFold() {
+        return new Fold<>(Collection::stream);
+    }
     Stream<Child> all(Main main);
 
     <GrandChild> IFold<Main, GrandChild> chainFold(IFold<Child, GrandChild> t);
 
     void forEach(Main main, ConsumerWithException<Child> consumer) throws Exception;
+    IFold<Main, Child> lastN(int n);
 
     IFold<Main, Child> filter(Predicate<Child> p);
 
     IFold<Main, Child> unique();
-    <T> IFold<Main, T> map(Function<Child, T> fn) ;
+    <T> IFold<Main, T> map(Function<Child, T> fn);
     <Child2, Merged> IFold<Main, Merged> merge(IFold<Main, Child2> other, IISO<Tuple2<Child, Child2>, Merged> iso);
 
 }
@@ -33,6 +41,10 @@ public interface IFold<Main, Child> {
 abstract class AbstractFold<Main, Child> implements IFold<Main, Child> {
     public <GrandChild> IFold<Main, GrandChild> chainFold(IFold<Child, GrandChild> f2) {
         return new Fold<Main, GrandChild>(main -> this.all(main).flatMap(f2::all));
+    }
+
+    public IFold<Main, Child> lastN(int n) {
+        return IFold.of(main -> StreamHelper.lastN(all(main), n));
     }
 
     public IFold<Main, Child> filter(Predicate<Child> p) {
