@@ -6,7 +6,7 @@
   <parent>
     <groupId>one.xingyi</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.10-SNAPSHOT</version>
   </parent>
   <artifactId>rawprocessors</artifactId>
 

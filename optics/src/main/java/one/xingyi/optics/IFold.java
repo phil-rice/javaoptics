@@ -9,6 +9,7 @@ import one.xingyi.utils.StreamHelper;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -18,6 +19,10 @@ import java.util.stream.Stream;
 public interface IFold<Main, Child> {
     static <Main, Child> IFold<Main, Child> of(Function<Main, Stream<Child>> allFn) {
         return new Fold<>(allFn);
+    }
+
+    static <Main, Child> IFold<Main, Child> ofWithoutNulls(Function<Main, Stream<Child>> allFn) {
+        return new Fold<>(main->allFn.apply(main).filter(Objects::nonNull));
     }
 
     static <T> IFold<Collection<T>, T> collectionFold() {

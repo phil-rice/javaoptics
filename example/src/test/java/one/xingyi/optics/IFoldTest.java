@@ -37,6 +37,11 @@ public class IFoldTest {
     void testMap() {
         assertEquals(List.of("a1", "b1", "c1"), listFold.map(s -> s + "1").all(List.of("a", "b", "c")).toList());
     }
+
+    @Test
+    void testOfWithoutNulls() {
+        assertEquals(List.of("1", "2", "3"), IFold.ofWithoutNulls(main -> Stream.of(null, "1", null, "2", null, "3")).all("anything").toList());
+    }
     @Test
     void testForEach() throws Exception {
         var result = new StringBuilder();
@@ -49,9 +54,4 @@ public class IFoldTest {
     }
 
 
-    @Test
-    void testLast() {
-        assertEquals("c", StreamHelper.last(Stream.of("a", "b", "c")));
-        assertNull(StreamHelper.last(Stream.of()));
-    }
 }

@@ -20,4 +20,8 @@ public interface StreamHelper {
         return s.reduce(null, (acc, v) -> v);
     }
 
+    static <T> T first(Stream<T> s) {
+        return s.findFirst().orElse(null);
     }
+
+}
