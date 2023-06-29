@@ -9,6 +9,7 @@ import one.xingyi.utils.StreamHelper;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -22,13 +23,14 @@ public interface IFold<Main, Child> {
     }
 
     static <Main, Child> IFold<Main, Child> ofWithoutNulls(Function<Main, Stream<Child>> allFn) {
-        return new Fold<>(main->allFn.apply(main).filter(Objects::nonNull));
+        return new Fold<>(main -> allFn.apply(main).filter(Objects::nonNull));
     }
 
     static <T> IFold<Collection<T>, T> collectionFold() {
         return new Fold<>(Collection::stream);
     }
     Stream<Child> all(Main main);
+    List<Child> allAsList(Main main);
 
     <GrandChild> IFold<Main, GrandChild> chainFold(IFold<Child, GrandChild> t);
 
@@ -48,6 +50,10 @@ abstract class AbstractFold<Main, Child> implements IFold<Main, Child> {
         return new Fold<Main, GrandChild>(main -> this.all(main).flatMap(f2::all));
     }
 
+    @Override
+    public List<Child> allAsList(Main main) {
+        return all(main).collect(Collectors.toList());
+    }
     public IFold<Main, Child> lastN(int n) {
         return IFold.of(main -> StreamHelper.lastN(all(main), n));
     }

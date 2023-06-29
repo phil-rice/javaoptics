@@ -14,6 +14,13 @@ import java.util.function.Supplier;
 
 public interface IPartialFunctionE<From, To> extends FunctionWithException<From, To> {
     boolean isDefinedAt(From from) throws Exception;
+
+    default IPartialFunctionE<From, To> orElse(IPartialFunctionE<From, To> other) {
+        return IPartialFunctionE.of(
+                from -> isDefinedAt(from) || other.isDefinedAt(from),
+                from -> isDefinedAt(from) ? apply(from) : other.apply(from));
+    }
+
     static <From, To> IPartialFunctionE<From, To> always(FunctionWithException<From, To> fn) {
         return IPartialFunctionE.of(q -> true, fn);
     }

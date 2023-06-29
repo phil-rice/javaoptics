@@ -14,7 +14,11 @@ import java.util.function.Supplier;
 public interface IPartialFunction<From, To> extends Function<From, To> {
     boolean isDefinedAt(From from);
 
-
+    default IPartialFunction<From, To> orElse(IPartialFunction<From, To> other) {
+        return IPartialFunction.of(
+                from -> isDefinedAt(from) || other.isDefinedAt(from),
+                from -> isDefinedAt(from) ? apply(from) : other.apply(from));
+    }
 
 
     static <From, To> IPartialFunction<From, To> always(Function<From, To> fn) {

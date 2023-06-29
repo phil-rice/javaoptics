@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
+import static one.xingyi.fp.IPartialFunction.always;
+import static one.xingyi.sqlAndParams.ISqlAndParams.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RequiredArgsConstructor
@@ -16,16 +18,14 @@ class RequestForTest {
     final String data;
 }
 
-class FrTest implements ISqlAndParamsBuilder<RequestForTest> {
 
-}
-class ISqlAndParamsBuilderTest implements ISqlAndParamsBuilder<RequestForTest> {
+class ISqlAndParamsBuilderTest{
 
     RequestForTest req = new RequestForTest("some", "data");
     RequestForTest reqWithSpacesAsWell = new RequestForTest("  some  ", "data");
     RequestForTest reqWithEmptyStrings = new RequestForTest("", "");
     RequestForTest reqWithNulls = new RequestForTest(null, null);
-    Function<RequestForTest, SqlAndParams> sqlParamFn = req -> ISqlAndParams.preSql(req.some + req.data);
+    Function<RequestForTest, ISqlAndParams> sqlParamFn = req -> ISqlAndParams.preSql(req.some + req.data);
     @Test
     void testAlways() {
         val fn = always(sqlParamFn);
