@@ -1,17 +1,14 @@
 package one.xingyi.optics;
 
-import lombok.var;
-import one.xingyi.fp.StreamComprehensionsForExceptions;
+import one.xingyi.helpers.StreamHelper;
 import one.xingyi.interfaces.ConsumerWithException;
-import one.xingyi.interfaces.FunctionWithException;
 import one.xingyi.tuples.Tuple2;
-import one.xingyi.utils.StreamHelper;
+
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;

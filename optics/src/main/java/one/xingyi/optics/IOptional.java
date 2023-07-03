@@ -1,5 +1,6 @@
 package one.xingyi.optics;
 
+import one.xingyi.helpers.StreamHelper;
 import one.xingyi.tuples.Tuple2;
 
 import java.util.Optional;
@@ -7,7 +8,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static one.xingyi.utils.StreamHelper.streamOf;
+import static one.xingyi.helpers.StreamHelper.*;
+
 
 public interface IOptional<Main, Child> extends ITraversal<Main, Child> {
     static <Main, Child> IOptional<Main, Child> of(Function<Main, Optional<Child>> optGetFn, BiFunction<Main, Child, Optional<Main>> optSetFn) {

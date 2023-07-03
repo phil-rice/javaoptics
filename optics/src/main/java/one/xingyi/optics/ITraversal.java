@@ -1,19 +1,18 @@
 package one.xingyi.optics;
 
 import one.xingyi.interfaces.ConsumerWithException;
-import one.xingyi.tuples.Tuple2;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static one.xingyi.fp.StreamComprehensionsForExceptions.forEachE;
-import static one.xingyi.utils.StreamHelper.streamOf;
+import static one.xingyi.helpers.StreamHelper.streamOf;
+
 
 public interface ITraversal<Main, Child> extends IFold<Main, Child> {
     Main modify(Main main, Function<Child, Child> fn);

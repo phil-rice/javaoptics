@@ -9,13 +9,12 @@
     <version>1.0.13</version>
   </parent>
 
-  <artifactId>sqlandparams</artifactId>
+  <artifactId>helpers</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>one.xingyi</groupId>
-      <artifactId>fp</artifactId>
-    </dependency>
-  </dependencies>
+      <artifactId>interfaces</artifactId>
+    </dependency></dependencies>
 
 </project>
