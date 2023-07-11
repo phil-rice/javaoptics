@@ -1,6 +1,5 @@
 package one.xingyi.optics;
 
-import one.xingyi.utils.StreamHelper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class IFoldTest {
     IFold<List<List<String>>, List<String>> listsFold = IFold.of(Collection::stream);

@@ -1,6 +1,6 @@
 package one.xingyi.optics;
 
-import one.xingyi.utils.StreamHelper;
+import one.xingyi.helpers.StreamHelper;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;

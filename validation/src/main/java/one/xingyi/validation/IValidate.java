@@ -11,8 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static one.xingyi.helpers.ListHelpers.append;
 
 public interface IValidate<T> extends BiFunction<List<String>, T, List<String>> {
@@ -63,6 +62,28 @@ public interface IValidate<T> extends BiFunction<List<String>, T, List<String>> 
 
     static <T, Field> IValidate<T> fieldNotNull(String fieldName, Function<T, Field> fieldFn) {
         return (path, t) -> IValidate.<Field>notNull().apply(append(path, fieldName), fieldFn.apply(t));
+    }
+    static IValidate<String> minLength(int minLength) {
+        return IValidate.<String>shouldBe("{0} Should have a min length of " + minLength, s -> s.length() > minLength);
+    }
+
+    static <T> IValidate<T> fieldMinLength(String fieldName, Function<T, String> fieldFn, int minLength) {
+        return validateChild(fieldName, fieldFn, minLength(minLength));
+    }
+
+    static IValidate<String> maxLength(int maxLength) {
+        return IValidate.<String>shouldBe("{0} Should have a max length of " + maxLength, s -> s.length() > maxLength);
+    }
+
+    static <T> IValidate<T> fieldMaxLength(String fieldName, Function<T, String> fieldFn, int maxLength) {
+        return validateChild(fieldName, fieldFn, maxLength(maxLength));
+    }
+    static IValidate<String> lengthBetween(int minLength, int maxLength) {
+        return compose(minLength(minLength), maxLength(maxLength));
+    }
+
+    static <T> IValidate<T> fieldLengthBetween(String fieldName, Function<T, String> fieldFn, int minLength, int maxLength) {
+        return validateChild(fieldName, fieldFn, lengthBetween(minLength, maxLength));
     }
 
     static <T, Field> IValidate<T> fieldIsOneOf(String fieldName, Function<T, Field> fieldFn, List<Field> legalValues) {

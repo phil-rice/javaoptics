@@ -31,6 +31,7 @@ class IValidateTest {
         final String line2;
     }
 
+
     @Test
     void testShouldBe() {
         IValidate<String> validate = shouldBe("message {0}-{1}", s -> s.equals("fred"));
@@ -101,14 +102,16 @@ class IValidateTest {
         assertEquals(Collections.emptyList(), validate.apply(Collections.singletonList("context"), validPerson));
         assertEquals(Collections.singletonList("[context, name] is notFred which is not one of [fred, jim]"), validate.apply(Collections.singletonList("context"), notFredPerson));
     }
+
+
     IValidate<Address> addressV = compose(
             fieldNotNull("line1", Address::getLine1),
             fieldNotNull("line2", Address::getLine2)
     );
     IValidate<Person> personV = compose(
             fieldNotNull("name", Person::getName),
+            fieldLengthBetween("name", Person::getName, 3, 10),
             fieldNotNull("address", Person::getAddress),
-            fieldShouldBe("name", Person::getName, "message {0}-{1}", s -> s.equals("fred")),
             validateChild("address", Person::getAddress, addressV));
     @Test
     void testCompose() {

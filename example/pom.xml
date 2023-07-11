@@ -26,5 +26,11 @@
       <artifactId>processors</artifactId>
       <version>${xingyi.version}</version>
     </dependency>
+    <dependency>
+      <groupId>one.xingyi</groupId>
+      <artifactId>helpers</artifactId>
+      <version>${xingyi.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
