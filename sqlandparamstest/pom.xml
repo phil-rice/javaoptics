@@ -9,12 +9,21 @@
     <version>1.0.14-SNAPSHOT</version>
   </parent>
 
-  <artifactId>helpers</artifactId>
+  <artifactId>sqlandparamstest</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>one.xingyi</groupId>
-      <artifactId>interfaces</artifactId>
-    </dependency></dependencies>
+      <artifactId>fp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>one.xingyi</groupId>
+      <artifactId>sqlandparams</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.jsqlparser</groupId>
+      <artifactId>jsqlparser</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

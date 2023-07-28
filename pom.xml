@@ -6,7 +6,7 @@
 
   <groupId>one.xingyi</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0.13</version>
+  <version>1.0.14-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>javaOptics</name>
   <description>Tools for handling immutability in Java using optics</description>
@@ -34,6 +34,7 @@
     <module>helpers</module>
     <module>fp</module>
     <module>sqlandparams</module>
+    <module>sqlandparamstest</module>
     <module>rawprocessors</module>
     <module>processors</module>
     <module>optics</module>
@@ -50,32 +51,37 @@
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>optics</artifactId>
-        <version>1.0.13</version>
+        <version>1.0.14-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>fp</artifactId>
-        <version>1.0.13</version>
+        <version>1.0.14-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>helpers</artifactId>
-        <version>1.0.13</version>
+        <version>1.0.14-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>processors</artifactId>
-        <version>1.0.13</version>
+        <version>1.0.14-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>rawprocessors</artifactId>
-        <version>1.0.13</version>
+        <version>1.0.14-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>interfaces</artifactId>
-        <version>1.0.13</version>
+        <version>1.0.14-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>one.xingyi</groupId>
+        <artifactId>sqlandparams</artifactId>
+        <version>1.0.14-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>
@@ -101,6 +107,11 @@
         <artifactId>junit-jupiter-api</artifactId>
         <version>5.7.0</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.github.jsqlparser</groupId>
+        <artifactId>jsqlparser</artifactId>
+        <version>4.6</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

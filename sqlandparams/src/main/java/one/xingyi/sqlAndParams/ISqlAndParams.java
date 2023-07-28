@@ -16,6 +16,8 @@ public interface ISqlAndParams {
     String getPostSql();
     List<Object> getParams();
 
+    default public String getFullSql() {return getPreSql() + " " + getPostSql();}
+
     static ISqlAndParams preSql(String sql, Object... params) {
         return new SqlAndParams(sql, "", Arrays.asList(params));
     }
@@ -39,7 +41,7 @@ public interface ISqlAndParams {
         return new SqlAndParams(preSql.toString(), postSql.toString(), params);
     }
 
-    static <Query> IPartialFunction<Query, SqlAndParams> always(Function<Query, SqlAndParams> fn) {
+    static <Query> IPartialFunction<Query, ISqlAndParams> always(Function<Query, ISqlAndParams> fn) {
         return IPartialFunction.always(fn);
     }
 
