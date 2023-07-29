@@ -1,11 +1,13 @@
 package one.xingyi.sqlAndParamsTest;
 
-import lombok.val;
+import lombok.*;
 import net.sf.jsqlparser.JSQLParserException;
+import one.xingyi.fp.IPartialFunction;
 import one.xingyi.sqlAndParams.ISqlAndParams;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,5 +50,43 @@ class ISqlAndParamsTestTest {
         assertThrows(SqlAndParamsMismatchException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("select 1 from dual where ?=1 and ?=2", "", "1")));
     }
 
+    @RequiredArgsConstructor
+    @ToString
+    @Getter
+    @EqualsAndHashCode
+    class RequestForTest {
+        final String some;
+        final String data;
+    }
+
+    RequestForTest reqEmpty = new RequestForTest(null, null);
+    RequestForTest reqFull = new RequestForTest("some", "data");
+
+    IPartialFunction<RequestForTest, ISqlAndParams> fn0Always =
+            ISqlAndParams.always(req -> ISqlAndParams.of("select * from table1", "where true"));
+    IPartialFunction<RequestForTest, ISqlAndParams> fn1 =
+            ISqlAndParams.stringFieldInWhere(req -> req.some, req -> "and ?=some");
+
+    IPartialFunction<RequestForTest, ISqlAndParams> brokenfn1 =
+            ISqlAndParams.stringFieldInWhere(req -> req.some, req -> "?='some'");
+    IPartialFunction<RequestForTest, ISqlAndParams> fn2 =
+            ISqlAndParams.stringFieldInWhere(req -> req.data, req -> "and ?='data'");
+
+    List<IPartialFunction<RequestForTest, ISqlAndParams>> list012 = Arrays.asList(fn0Always, fn1, fn2);
+    List<IPartialFunction<RequestForTest, ISqlAndParams>> brokenlist = Arrays.asList(fn0Always, brokenfn1, fn2);
+    @Test
+    void testOnListOfPfns() throws JSQLParserException {
+        ISqlAndParamsTest.checkSqlAndParamsPfnListLegal(reqEmpty, list012);
+        ISqlAndParamsTest.checkSqlAndParamsPfnListLegal(reqFull, list012);
+
+        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlAndParamsPfnListLegal(reqFull, brokenlist));
+    }
+
+    @Test
+    void testPermutations() {
+        ISqlAndParamsTest.testPermutations(reqFull, list012);
+        var e = assertThrows(RuntimeException.class, () -> ISqlAndParamsTest.testPermutations(reqFull, brokenlist));
+        assertEquals("Failed for [true, true, false] SqlAndParams(preSql=select * from table1, postSql=where true ?='some', params=[some])", e.getMessage());
+    }
 
 }

@@ -2,14 +2,15 @@ package one.xingyi.fp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
+import one.xingyi.helpers.Permutations;
+import one.xingyi.interfaces.BiConsumerWithException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
+import java.util.stream.Stream;
 
 public interface IPartialFunction<From, To> extends Function<From, To> {
     boolean isDefinedAt(From from);
@@ -22,7 +23,7 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
 
 
     static <From, To> IPartialFunction<From, To> always(Function<From, To> fn) {
-        return IPartialFunction.of(q -> true, fn);
+        return new PartialFunctionAlwaysTrue<>(q -> true, fn);
     }
     static <From, To> To applyOrError(IPartialFunction<From, To> pfn, From from) {
         if (pfn.isDefinedAt(from))
@@ -70,7 +71,46 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
                 });
 
     }
+
+    static <From, To> Predicate<List<Boolean>> isOkToUseBooleans(List<IPartialFunction<From, To>> pfns) {
+        return booleans -> {
+            if (pfns.size() != booleans.size())
+                throw new IllegalArgumentException("Software error: pfns and booleans must be the same size. Pfns: " + pfns.size() + " booleans " + booleans.size() + " ->" + booleans);
+            for (int i = 0; i < pfns.size(); i++)
+                if ((pfns.get(i) instanceof PartialFunctionAlwaysTrue) && !booleans.get(i))
+                    return false;
+            return true;
+        };
+    }
+    static <From, To> Function<List<Boolean>, List<To>> applyListBooleans(List<IPartialFunction<From, To>> pfns, From from) {
+        return booleans -> {
+            if (pfns.size() != booleans.size())
+                throw new IllegalArgumentException("Software error: pfns and booleans must be the same size");
+            List<To> result = new ArrayList<>();
+            for (int i = 0; i < pfns.size(); i++)
+                if (booleans.get(i)) {
+                    var pfn = pfns.get(i);
+                    if (!pfn.isDefinedAt(from))
+                        throw new IllegalArgumentException("Software error: pfn " + i + " not defined at " + from);
+                    result.add(pfn.apply(from));
+                }
+            return result;
+        };
+    }
+
+    static <From, To> Stream<List<To>> permutations(List<IPartialFunction<From, To>> pfns, From from) {
+        var isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
+        var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from);
+        return Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).map(applyListBooleans);
+    }
+    static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from,  BiConsumer<List<Boolean>, List<To>> consumer) {
+        var isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
+        var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from);
+        Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).forEach(booleans ->
+                consumer.accept(booleans, applyListBooleans.apply(booleans)));
+    }
 }
+
 @RequiredArgsConstructor
 class PartialFunction<From, To> implements IPartialFunction<From, To> {
     final Predicate<From> isDefinedAt;
@@ -82,5 +122,10 @@ class PartialFunction<From, To> implements IPartialFunction<From, To> {
     @Override
     public To apply(From from) {
         return fn.apply(from);
+    }
+}
+class PartialFunctionAlwaysTrue<From, To> extends PartialFunction<From, To> implements IPartialFunctionAlwaysTrue {
+    public PartialFunctionAlwaysTrue(Predicate<From> isDefinedAt, Function<From, To> fn) {
+        super(isDefinedAt, fn);
     }
 }

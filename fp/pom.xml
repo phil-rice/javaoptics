@@ -15,6 +15,11 @@
     <dependency>
       <groupId>one.xingyi</groupId>
       <artifactId>interfaces</artifactId>
-    </dependency></dependencies>
+    </dependency>
+    <dependency>
+      <groupId>one.xingyi</groupId>
+      <artifactId>helpers</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

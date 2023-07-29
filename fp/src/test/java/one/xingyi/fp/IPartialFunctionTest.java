@@ -1,12 +1,15 @@
 package one.xingyi.fp;
 
 import lombok.var;
+import one.xingyi.helpers.Permutations;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +21,7 @@ class IPartialFunctionTest {
     Predicate<String> hasE = s -> s.contains("e");
     Predicate<String> isGoodbye = s -> s.equals("goodbye");
     Function<String, String> upperCase = String::toUpperCase;
+    IPartialFunction<String, String> always = IPartialFunction.always(s -> s + "_always");
     PartialFunction<String, String> helloPf = (PartialFunction<String, String>) IPartialFunction.of(isHello, upperCase);
     PartialFunction<String, String> hasOPf = (PartialFunction<String, String>) IPartialFunction.of(hasO, s -> s + " contains o");
     PartialFunction<String, String> hasEPf = (PartialFunction<String, String>) IPartialFunction.of(hasE, s -> s + " contains e");
@@ -26,6 +30,8 @@ class IPartialFunctionTest {
     void testOf() {
         assertSame(isHello, helloPf.isDefinedAt);
         assertSame(upperCase, helloPf.fn);
+        assertFalse(isHello instanceof PartialFunctionAlwaysTrue);
+        assertFalse(upperCase instanceof PartialFunctionAlwaysTrue);
     }
 
     @Test
@@ -36,6 +42,7 @@ class IPartialFunctionTest {
         assertTrue(pf.isDefinedAt.test("anything"));
         assertTrue(pf.isDefinedAt.test(null));
         assertSame(upperCase, pf.fn);
+        assertTrue(pf instanceof PartialFunctionAlwaysTrue);
     }
 
     @Test
@@ -92,6 +99,44 @@ class IPartialFunctionTest {
         assertEquals("GOODBYE", chained.apply("goodbye"));
         assertEquals("has o contains o", chained.apply("has o"));
         assertEquals("has e contains e", chained.apply("has e"));
+    }
+
+    @Test
+    void isOkToUseListBooleans() {
+        List<IPartialFunction<String, String>> pfns = Arrays.asList(helloPf, always, goodbyePf);
+        assertEquals(true, IPartialFunction.isOkToUseBooleans(pfns).test(Arrays.asList(false, true, false)));
+        assertEquals(true, IPartialFunction.isOkToUseBooleans(pfns).test(Arrays.asList(true, true, true)));
+        assertEquals(false, IPartialFunction.isOkToUseBooleans(pfns).test(Arrays.asList(false, false, false)));
+    }
+
+    @Test
+    void testApplyListBooleans() {
+        List<IPartialFunction<String, String>> pfns = Arrays.asList(helloPf, always, hasOPf);
+        assertEquals(Arrays.asList("f_always"), IPartialFunction.applyListBooleans(pfns, "f").apply(Arrays.asList(false, true, false)));
+        assertEquals(Arrays.asList("HELLO", "hello_always", "hello contains o"), IPartialFunction.applyListBooleans(pfns, "hello").apply(Arrays.asList(true, true, true)));
+    }
+    @Test
+    void testPermutations() {
+        List<IPartialFunction<String, String>> pfns = Arrays.asList(helloPf, always, hasOPf);
+        assertEquals(Arrays.asList(
+                Arrays.asList("hello_always"),
+                Arrays.asList("HELLO", "hello_always"),
+                Arrays.asList("hello_always", "hello contains o"),
+                Arrays.asList("HELLO", "hello_always", "hello contains o")
+        ), IPartialFunction.permutations(pfns, "hello").collect(Collectors.toList()));
+    }
+    @Test
+    void testforEachPermutation() {
+        List<IPartialFunction<String, String>> pfns = Arrays.asList(helloPf, always, hasOPf);
+        List<String> results = new ArrayList<>();
+        IPartialFunction.forEachPermutation(pfns, "hello", (booleans, merged) -> results.add(booleans + "->" + merged));
+        assertEquals(Arrays.asList(
+                "[false, true, false]->[hello_always]",
+                "[true, true, false]->[HELLO, hello_always]",
+                "[false, true, true]->[hello_always, hello contains o]",
+                "[true, true, true]->[HELLO, hello_always, hello contains o]"
+        ), results);
+
     }
 
 }
