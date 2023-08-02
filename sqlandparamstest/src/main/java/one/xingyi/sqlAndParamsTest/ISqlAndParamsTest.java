@@ -24,7 +24,9 @@ public interface ISqlAndParamsTest {
 
 
     static void checkSqlAndParamsLegal(ISqlAndParams sqlAndParams) throws JSQLParserException {
-        String sql = sqlAndParams.getFullSql(); checkSqlLegal(sql); checkParamsCountAgainstSql(sqlAndParams);
+        String sql = sqlAndParams.getFullSql();
+        checkSqlLegal(sql);
+        checkParamsCountAgainstSql(sqlAndParams);
     }
 
     static <Req> void checkSqlAndParamsPfnListLegal(Req req, List<IPartialFunction<Req, ISqlAndParams>> pfnList) throws JSQLParserException {
@@ -33,7 +35,8 @@ public interface ISqlAndParamsTest {
     }
     static <Req> void testPermutations(Req req, List<IPartialFunction<Req, ISqlAndParams>> pfnList) {
         IPartialFunction.forEachPermutation(pfnList, req, (booleans, list) -> {
-            var merged = ISqlAndParams.merge(list); try {
+            var merged = ISqlAndParams.merge(list);
+            try {
                 checkSqlAndParamsLegal(merged);
             } catch (Exception e) {
                 throw new RuntimeException("Failed for " + booleans + " " + merged, e);

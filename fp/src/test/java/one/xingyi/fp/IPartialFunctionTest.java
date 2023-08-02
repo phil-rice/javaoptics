@@ -106,6 +106,7 @@ class IPartialFunctionTest {
         List<IPartialFunction<String, String>> pfns = Arrays.asList(helloPf, always, goodbyePf);
         assertEquals(true, IPartialFunction.isOkToUseBooleans(pfns).test(Arrays.asList(false, true, false)));
         assertEquals(true, IPartialFunction.isOkToUseBooleans(pfns).test(Arrays.asList(true, true, true)));
+
         assertEquals(false, IPartialFunction.isOkToUseBooleans(pfns).test(Arrays.asList(false, false, false)));
     }
 

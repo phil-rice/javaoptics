@@ -83,6 +83,9 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
         };
     }
     static <From, To> Function<List<Boolean>, List<To>> applyListBooleans(List<IPartialFunction<From, To>> pfns, From from) {
+        return applyListBooleans(pfns, from, true);
+    }
+    static <From, To> Function<List<Boolean>, List<To>> applyListBooleans(List<IPartialFunction<From, To>> pfns, From from, boolean throwExceptionIfNotDefined) {
         return booleans -> {
             if (pfns.size() != booleans.size())
                 throw new IllegalArgumentException("Software error: pfns and booleans must be the same size");
@@ -90,9 +93,11 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
             for (int i = 0; i < pfns.size(); i++)
                 if (booleans.get(i)) {
                     var pfn = pfns.get(i);
-                    if (!pfn.isDefinedAt(from))
-                        throw new IllegalArgumentException("Software error: pfn " + i + " not defined at " + from);
-                    result.add(pfn.apply(from));
+                    if (pfn.isDefinedAt(from)) result.add(pfn.apply(from));
+                    else {
+                        if (throwExceptionIfNotDefined)
+                            throw new IllegalArgumentException("Software error: pfn " + i + " not defined at " + from);
+                    }
                 }
             return result;
         };
@@ -103,9 +108,12 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
         var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from);
         return Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).map(applyListBooleans);
     }
-    static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from,  BiConsumer<List<Boolean>, List<To>> consumer) {
+    static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer) {
+        forEachPermutation(pfns, from, consumer, true);
+    }
+    static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer,boolean throwExceptionIfNotDefined) {
         var isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
-        var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from);
+        var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from, throwExceptionIfNotDefined);
         Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).forEach(booleans ->
                 consumer.accept(booleans, applyListBooleans.apply(booleans)));
     }
