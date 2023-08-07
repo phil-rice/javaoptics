@@ -1,7 +1,6 @@
 package one.xingyi.fp;
 
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 import one.xingyi.interfaces.FunctionWithException;
 import one.xingyi.interfaces.PredicateWithException;
 
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public interface IPartialFunctionE<From, To> extends FunctionWithException<From, To> {
@@ -40,7 +38,7 @@ public interface IPartialFunctionE<From, To> extends FunctionWithException<From,
     }
     static <From, To> FunctionWithException<From, List<To>> mapFn(Collection<IPartialFunctionE<From, To>> fns) {
         return from -> {
-            var result = new ArrayList<To>();
+            List<To> result = new ArrayList<To>();
             for (IPartialFunctionE<From, To> fn : fns)
                 if (fn.isDefinedAt(from))
                     result.add(fn.apply(from));
@@ -76,6 +74,10 @@ public interface IPartialFunctionE<From, To> extends FunctionWithException<From,
 class PartialFunctionE<From, To> implements IPartialFunctionE<From, To> {
     final PredicateWithException<From> isDefinedAt;
     final FunctionWithException<From, To> fn;
+    PartialFunctionE(PredicateWithException<From> isDefinedAt, FunctionWithException<From, To> fn) {
+    	this.isDefinedAt = isDefinedAt;
+    	this.fn = fn;
+    }
     @Override
     public boolean isDefinedAt(From from) throws Exception {
         return isDefinedAt.test(from);

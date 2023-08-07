@@ -14,4 +14,8 @@ import one.xingyi.optics.annotations.Optics;
 public class Broken {
     final String name;
     final String withoutConstructor;
+    Broken(String name, String withoutConstructor) {
+    	this.name = name;
+    	this.withoutConstructor = withoutConstructor;
+    }
 }

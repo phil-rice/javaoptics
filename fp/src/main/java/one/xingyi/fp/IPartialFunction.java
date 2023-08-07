@@ -1,9 +1,7 @@
 package one.xingyi.fp;
 
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 import one.xingyi.helpers.Permutations;
-import one.xingyi.interfaces.BiConsumerWithException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +47,7 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
         };
     }
     static <From, To, Result> Function<From, Result> mapReduceFn(Collection<IPartialFunction<From, To>> fns, Function<List<To>, Result> reduceFn) {
-        var fn = mapFn(fns);
+        Function<From, List<To>> fn = mapFn(fns);
         return from -> reduceFn.apply(fn.apply(from));
     }
     static <From, To> Function<From, To> chain(To defValue, Collection<IPartialFunction<From, To>> fns) {
@@ -92,7 +90,7 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
             List<To> result = new ArrayList<>();
             for (int i = 0; i < pfns.size(); i++)
                 if (booleans.get(i)) {
-                    var pfn = pfns.get(i);
+                    IPartialFunction<From, To> pfn = pfns.get(i);
                     if (pfn.isDefinedAt(from)) result.add(pfn.apply(from));
                     else {
                         if (throwExceptionIfNotDefined)
@@ -104,16 +102,16 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
     }
 
     static <From, To> Stream<List<To>> permutations(List<IPartialFunction<From, To>> pfns, From from) {
-        var isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
-        var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from);
+        Predicate<List<Boolean>> isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
+        Function<List<Boolean>, List<To>> applyListBooleans = IPartialFunction.applyListBooleans(pfns, from);
         return Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).map(applyListBooleans);
     }
     static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer) {
         forEachPermutation(pfns, from, consumer, true);
     }
     static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer,boolean throwExceptionIfNotDefined) {
-        var isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
-        var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from, throwExceptionIfNotDefined);
+    	Predicate<List<Boolean>> isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
+    	Function<List<Boolean>, List<To>> applyListBooleans = IPartialFunction.applyListBooleans(pfns, from, throwExceptionIfNotDefined);
         Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).forEach(booleans ->
                 consumer.accept(booleans, applyListBooleans.apply(booleans)));
     }
@@ -123,6 +121,10 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
 class PartialFunction<From, To> implements IPartialFunction<From, To> {
     final Predicate<From> isDefinedAt;
     final Function<From, To> fn;
+    PartialFunction(Predicate<From> isDefinedAt, Function<From, To> fn) {
+    	this.isDefinedAt = isDefinedAt;
+    	this.fn = fn;
+    }
     @Override
     public boolean isDefinedAt(From from) {
         return isDefinedAt.test(from);

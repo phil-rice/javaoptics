@@ -15,6 +15,11 @@ import one.xingyi.optics.annotations.Optics;
 public class Child {
     private final String name;
     private final int age;
+    
+    Child(String name, int age) {
+    	this.name = name;
+    	this.age = age;
+    }
 
 }
 

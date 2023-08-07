@@ -27,18 +27,27 @@ public interface ISqlAndParams {
     static ISqlAndParams postSql(String sql, Object... params) {
         return new SqlAndParams("", sql, Arrays.asList(params));
     }
-    static ISqlAndParams merge(List<ISqlAndParams> sqlAndParams) {
-        StringBuilder preSql = new StringBuilder();
-        StringBuilder postSql = new StringBuilder();
-        List<Object> params = new ArrayList<>();
-        for (ISqlAndParams sap : sqlAndParams) {
-            if (preSql.length() > 0) preSql.append(' ');
-            preSql.append(sap.getPreSql().trim());
-            if (postSql.length() > 0) postSql.append(' ');
-            postSql.append(sap.getPostSql().trim());
-            params.addAll(sap.getParams());
-        }
-        return new SqlAndParams(preSql.toString(), postSql.toString(), params);
+    static ISqlAndParams mergeWithPreAndPostSql(List<ISqlAndParams> sqlAndParams) {
+    	StringBuilder preSql = new StringBuilder();
+    	StringBuilder postSql = new StringBuilder();
+    	List<Object> params = new ArrayList<>();
+    	for (ISqlAndParams sap : sqlAndParams) {
+    		if (preSql.length() > 0) preSql.append(' ');
+    		params.addAll(sap.getParams());
+    		if (postSql.length() > 0) postSql.append(' ');
+    		params.addAll(sap.getParams());
+    	}
+    	return new SqlAndParams(preSql.toString(), postSql.toString(),params);
+    }
+    
+    static ISqlAndParams mergeWithSql(List<ISqlAndParams> sqlAndParams) {
+    	StringBuilder sql = new StringBuilder();
+    	List<Object> params = new ArrayList<>();
+    	for (ISqlAndParams sap : sqlAndParams) {
+    		if (sql.length() > 0) sql.append(' ');
+    		params.addAll(sap.getParams());
+    	}
+    	return new SqlAndParams(sql.toString(), params);
     }
 
     static <Query> IPartialFunction<Query, ISqlAndParams> always(Function<Query, ISqlAndParams> fn) {
@@ -61,13 +70,31 @@ public interface ISqlAndParams {
 @Getter
 @EqualsAndHashCode
 class SqlAndParams implements ISqlAndParams {
-    public final String preSql;
-    public final String postSql;
+	public String sql;
+    public String preSql;
+    public String postSql;
     public final List<Object> params;
     public SqlAndParams(String preSql, String postSql, List<Object> params) {
         this.preSql = preSql.trim();
         this.postSql = postSql.trim();
         this.params = Collections.unmodifiableList(params);
     }
+    public SqlAndParams(String sql, List<Object> params) {
+    	this.sql = sql.trim();
+    	this.params = Collections.unmodifiableList(params);
+    }
+    
+	@Override
+	public String getPreSql() {
+		return this.preSql;
+	}
+	@Override
+	public String getPostSql() {
+		return this.postSql;
+	}
+	@Override
+	public List<Object> getParams() {
+		return this.params;
+	}
 
 }
