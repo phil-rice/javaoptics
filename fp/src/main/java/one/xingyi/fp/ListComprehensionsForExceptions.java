@@ -1,11 +1,9 @@
 package one.xingyi.fp;
 
-import lombok.var;
 import one.xingyi.interfaces.BiFunctionWithException;
 import one.xingyi.interfaces.ConsumerWithException;
 import one.xingyi.interfaces.FunctionWithException;
 
-import java.io.IOException;
 import java.util.*;
 
 public interface ListComprehensionsForExceptions {
@@ -48,15 +46,15 @@ public interface ListComprehensionsForExceptions {
         return result;
     }
     static <Acc, T> Acc foldE(Iterable<T> iterable, BiFunctionWithException<Acc, T, Acc> foldFn, Acc zero) throws Exception {
-        var result = zero;
+        Acc result = zero;
         for (T t : iterable)
             result = foldFn.apply(result, t);
         return result;
     }
     static <T> T reduceE(Iterable<T> iterable, BiFunctionWithException<T, T, T> foldFn) throws Exception {
-        var iterator = iterable.iterator();
+        Iterator<T> iterator = iterable.iterator();
         if (!iterator.hasNext()) throw new IllegalArgumentException("reduceE has been called with an empty list");
-        var result = iterator.next();
+        T result = iterator.next();
         while (iterator.hasNext())
             result = foldFn.apply(result, iterator.next());
         return result;
