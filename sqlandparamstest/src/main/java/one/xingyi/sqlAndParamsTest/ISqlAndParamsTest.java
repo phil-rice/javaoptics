@@ -34,6 +34,9 @@ public interface ISqlAndParamsTest {
         checkSqlAndParamsLegal(merged);
     }
     static <Req> void testPermutations(Req req, List<IPartialFunction<Req, ISqlAndParams>> pfnList) {
+        testPermutations(req, pfnList, true);
+    }
+    static <Req> void testPermutations(Req req, List<IPartialFunction<Req, ISqlAndParams>> pfnList, boolean throwExceptionIfNotDefined) {
         IPartialFunction.forEachPermutation(pfnList, req, (booleans, list) -> {
             var merged = ISqlAndParams.merge(list);
             try {
@@ -41,6 +44,6 @@ public interface ISqlAndParamsTest {
             } catch (Exception e) {
                 throw new RuntimeException("Failed for " + booleans + " " + merged, e);
             }
-        });
+        }, throwExceptionIfNotDefined);
     }
 }

@@ -3,13 +3,15 @@ package one.xingyi.fp;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
 import one.xingyi.helpers.Permutations;
-import one.xingyi.interfaces.BiConsumerWithException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public interface IPartialFunction<From, To> extends Function<From, To> {
@@ -39,6 +41,25 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
     static <From, To> IPartialFunction<From, To> notNull(Function<From, To> fn) {
         return IPartialFunction.of(Objects::nonNull, fn);
     }
+    static <From, To> IPartialFunction<List<From>, To> listDefined(Function<List<From>, To> fn) {
+        return IPartialFunction.of(list -> list != null && list.size() > 0, fn);
+    }
+
+    static <From, Child, To> PartialFunction<From, To> fromChild(Function<From, Child> childFn, Predicate<Child> isDefinedAt, Function<Child, To> fn) {
+        return new PartialFunction<>(from -> isDefinedAt.test(childFn.apply(from)), from -> fn.apply(childFn.apply(from)));
+    }
+
+    static <From, Child, To> PartialFunction<From, To> childNotNull(Function<From, Child> childFn, Function<Child, To> fn) {
+        return new PartialFunction<>(from -> childFn.apply(from) != null, from -> fn.apply(childFn.apply(from)));
+    }
+    static <From, Child, To> PartialFunction<From, To> childListDefined(Function<From, List<Child>> childFn, Function<List<Child>, To> fn) {
+        return new PartialFunction<>(from -> {
+            List<Child> children = childFn.apply(from);
+            return children != null && children.size() > 0;
+        }, from -> fn.apply(childFn.apply(from)));
+    }
+
+
     static <From, To> Function<From, List<To>> mapFn(Collection<IPartialFunction<From, To>> fns) {
         return from -> {
             List<To> result = new ArrayList<>();
@@ -108,10 +129,10 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
         var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from);
         return Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).map(applyListBooleans);
     }
-    static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer) {
+    static <From, To> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer) {
         forEachPermutation(pfns, from, consumer, true);
     }
-    static <From, To, Res> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer,boolean throwExceptionIfNotDefined) {
+    static <From, To> void forEachPermutation(List<IPartialFunction<From, To>> pfns, From from, BiConsumer<List<Boolean>, List<To>> consumer, boolean throwExceptionIfNotDefined) {
         var isOkToUseBooleans = IPartialFunction.isOkToUseBooleans(pfns);
         var applyListBooleans = IPartialFunction.applyListBooleans(pfns, from, throwExceptionIfNotDefined);
         Permutations.permutate(pfns.size()).filter(isOkToUseBooleans).forEach(booleans ->

@@ -1,5 +1,8 @@
 package one.xingyi.fp;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.var;
 import one.xingyi.helpers.Permutations;
 import org.junit.jupiter.api.Test;
@@ -52,6 +55,46 @@ class IPartialFunctionTest {
         assertTrue(pf.isDefinedAt.test("hello"));
         assertFalse(pf.isDefinedAt.test(null));
         assertSame(upperCase, pf.fn);
+    }
+
+    @Getter
+    @ToString
+    @RequiredArgsConstructor
+    static class ForTest {
+        final String a;
+        final List<Integer> ns;
+    }
+    static Function<List<Integer>, Integer> sum = ns -> ns.stream().reduce(0, Integer::sum);
+    static Function<ForTest, String> childAFn = ft -> ft.a;
+    @Test
+    void testFromChild() {
+        PartialFunction<ForTest, String> pf = IPartialFunction.fromChild(ForTest::getA, hasO, upperCase);
+        assertTrue(pf.isDefinedAt.test(new ForTest("hello", null)));
+        assertFalse(pf.isDefinedAt.test(new ForTest("hell", null)));
+        assertEquals("HELLO", pf.apply(new ForTest("hello", null)));
+    }
+    @Test
+    void testChildNotNull() {
+        PartialFunction<ForTest, String> pf = IPartialFunction.childNotNull(ForTest::getA, upperCase);
+        assertTrue(pf.isDefinedAt.test(new ForTest("hello", null)));
+        assertFalse(pf.isDefinedAt.test(new ForTest(null, null)));
+        assertEquals("HELLO", pf.apply(new ForTest("hello", null)));
+    }
+    @Test
+    void testListDefined() {
+        IPartialFunction<List<Integer>, Integer> pf = IPartialFunction.listDefined(sum);
+        assertTrue(pf.isDefinedAt(Arrays.asList(1, 2, 3)));
+        assertFalse(pf.isDefinedAt(Arrays.asList()));
+        assertFalse(pf.isDefinedAt(null));
+        assertEquals(6, pf.apply(Arrays.asList(1, 2, 3)));
+    }
+    @Test
+    void testChildListDefined() {
+        PartialFunction<ForTest, Integer> pf = IPartialFunction.childListDefined(ForTest::getNs, sum);
+        assertTrue(pf.isDefinedAt(new ForTest("hello", Arrays.asList(1, 2, 3))));
+        assertFalse(pf.isDefinedAt(new ForTest("hello", Arrays.asList())));
+        assertFalse(pf.isDefinedAt(new ForTest("hello", null)));
+        assertEquals(6, pf.apply(new ForTest("hello", Arrays.asList(1, 2, 3))));
     }
     @Test
     void testApplyOrError() throws Exception {
