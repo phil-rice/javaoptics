@@ -121,6 +121,16 @@ class IPartialFunctionTest {
     }
 
     @Test
+    void testMapReduceOfListsOfListsFn() {
+        List<IPartialFunction<String, String>> list1 = Arrays.asList(helloPf, goodbyePf);
+        List<IPartialFunction<String, String>> list2 = Arrays.asList(hasEPf, hasOPf);
+        var pf = IPartialFunction.mapReduceFn(list1, list -> String.join(":", list));
+        assertEquals("HELLO:hello contains e:hello contains o", pf.apply("hello"));
+        assertEquals("GOODBYE:goodbye contains e:goodbye contains o", pf.apply("goodbye"));
+
+    }
+
+    @Test
     void testChain() {
         var chained = IPartialFunction.chain("DefValue", Arrays.asList(helloPf, goodbyePf, hasEPf, hasOPf));
         assertEquals("HELLO", chained.apply("hello"));
@@ -182,5 +192,18 @@ class IPartialFunctionTest {
         ), results);
 
     }
+
+    @Test
+    void testIfThenElse() {
+        IPartialFunction<String, String> ifThen = IPartialFunction.ifThenElse(hasO, s -> s + "_hasO", s -> s + "_noO");
+        assertTrue(ifThen.isDefinedAt("hello"));
+        assertTrue(ifThen.isDefinedAt(""));
+        assertTrue(ifThen.isDefinedAt("aslkjsldjf"));
+        assertTrue(ifThen instanceof IPartialFunctionAlwaysTrue);
+        assertEquals("hello_hasO", ifThen.apply("hello"));
+        assertEquals("xxx_noO", ifThen.apply("xxx"));
+
+    }
+
 
 }

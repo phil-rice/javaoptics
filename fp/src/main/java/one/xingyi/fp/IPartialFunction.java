@@ -15,6 +15,9 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public interface IPartialFunction<From, To> extends Function<From, To> {
+    static <From, To> IPartialFunction<From, To> ifThenElse(Predicate<From> condition, Function<From, To> trueFn, Function<From, To> falseFn) {
+        return new PartialFunctionIfThenElse<>(condition, trueFn, falseFn);
+    }
     boolean isDefinedAt(From from);
 
     default IPartialFunction<From, To> orElse(IPartialFunction<From, To> other) {
@@ -156,5 +159,11 @@ class PartialFunction<From, To> implements IPartialFunction<From, To> {
 class PartialFunctionAlwaysTrue<From, To> extends PartialFunction<From, To> implements IPartialFunctionAlwaysTrue {
     public PartialFunctionAlwaysTrue(Predicate<From> isDefinedAt, Function<From, To> fn) {
         super(isDefinedAt, fn);
+    }
+}
+
+class PartialFunctionIfThenElse<From, To> extends PartialFunction<From, To> implements IPartialFunctionAlwaysTrue {
+    public PartialFunctionIfThenElse(Predicate<From> condition, Function<From, To> trueFn, Function<From, To> falseFn) {
+        super(ignore -> true, from -> condition.test(from) ? trueFn.apply(from) : falseFn.apply(from));
     }
 }
