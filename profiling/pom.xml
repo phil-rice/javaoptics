@@ -9,7 +9,7 @@
     <version>1.2.2</version>
   </parent>
 
-  <artifactId>fp</artifactId>
+  <artifactId>profiling</artifactId>
 
   <dependencies>
     <dependency>
