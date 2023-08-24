@@ -11,29 +11,30 @@ import java.util.function.Supplier;
 
 class ProfileImpl implements IProfile {
     private final ConcurrentHashMap<String, ProfileBuckets<ProfileBucket>> map;
+    private final String prefix;
     final INanoTime nanoTime;
-    public ProfileImpl(ConcurrentHashMap<String, ProfileBuckets<ProfileBucket>> map, INanoTime nanoTime) {
-        this.map = map;
-        this.nanoTime = nanoTime;
+    public ProfileImpl(String prefix, ConcurrentHashMap<String, ProfileBuckets<ProfileBucket>> map, INanoTime nanoTime) {
+        this.prefix = prefix; this.map = map; this.nanoTime = nanoTime;
+    }
+    public IProfile withPrefix(String prefix) {
+        return new ProfileImpl(this.prefix + prefix + ".", map, nanoTime);
     }
     @Override
     public String print() {
         int nanosToMs = 1000000;
-        return MapHelpers.print(map, (k, v) -> "{count: " + v.mapAndAdd(pb -> pb.count.get(), Integer::sum) + ", time: " + v.mapAndAdd(pb->pb.total.get(), Long::sum)/nanosToMs +
-                " " + "<10ms:" + v.lessThan10ms + ", <100ms:" + v.lessThan100ms + ", <1s:" + v.lessThan1s + ", <10s:" + v.lessThan10s + ", rest:" + v.rest + '}');
+        return MapHelpers.print(map, (k, v) -> "{count: " + v.mapAndAdd(pb -> pb.count.get(), Integer::sum) + ", time: " + v.mapAndAdd(pb -> pb.total.get(), Long::sum) / nanosToMs + ", avg: " + v.mapAndAdd(ProfileBucket::avg, Long::sum) / nanosToMs + ", <10ms:" + v.lessThan10ms + ", <100ms:" + v.lessThan100ms + ", <1s:" + v.lessThan1s + ", <10s:" + v.lessThan10s + ", rest:" + v.rest + '}');
     }
     @Override
     public <T, E extends Exception> T profileE(String name, SupplierWithExceptionE<T, E> fn) throws E {
         long start = nanoTime.nanoTime(); try {
             return fn.get();
         } finally {
-            add(name,  nanoTime.nanoTime() - start);
+            add(name, nanoTime.nanoTime() - start);
         }
     }
     @Override
     public <T> T profile(String name, Supplier<T> fn) {
-        long start = nanoTime.nanoTime();
-        try {
+        long start = nanoTime.nanoTime(); try {
             return fn.get();
         } finally {
             add(name, nanoTime.nanoTime() - start);
@@ -52,15 +53,16 @@ class ProfileImpl implements IProfile {
         long start = nanoTime.nanoTime(); try {
             fn.run();
         } finally {
-            add(name,  nanoTime.nanoTime() - start);
+            add(name, nanoTime.nanoTime() - start);
         }
 
     }
     @Override
     public void add(String name, long duration) {
-        boolean isIn = map.contains(name);
-        ProfileBuckets<ProfileBucket> bucket = map.getOrDefault(name, ProfileBuckets.create());
-        ProfileBuckets.add(bucket, duration); if (!isIn) map.put(name, bucket);
+        String fullName = prefix + name;
+        boolean isIn = map.contains(fullName);
+        ProfileBuckets<ProfileBucket> bucket = map.getOrDefault(fullName, ProfileBuckets.create());
+        ProfileBuckets.add(bucket, duration); if (!isIn) map.put(fullName, bucket);
     }
 
     @Override

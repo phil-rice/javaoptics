@@ -1,5 +1,6 @@
 package one.xingyi.profile;
 
+import lombok.var;
 import one.xingyi.helpers.MapHelpers;
 import one.xingyi.interfaces.INanoTime;
 import org.junit.jupiter.api.Test;
@@ -90,17 +91,22 @@ class IProfileTest {
         p.profile("one", () -> "hello");
         p.profile("one", () -> "hello");
         p.profile("two", () -> "hello");
-        assertEquals("one {count: 2, time: 2 <10ms:{count=2,total=2,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
-                "two {count: 1, time: 1 <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", p.print());
+        assertEquals("one {count: 2, time: 2, avg: 1, <10ms:{count=2,total=2,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
+                "two {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", p.print());
     }
     @Test
     void testProfileE() {
-        IProfile p = IProfile.makeProfileMap(INanoTime.testNanoTime());
-        p.profileE("one", () -> "hello");
-        p.profileE("one", () -> "hello");
-        p.profileE("two", () -> "hello");
-        assertEquals("one {count: 2, time: 2 <10ms:{count=2,total=2,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
-                "two {count: 1, time: 1 <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", p.print());
+        IProfile p1 = IProfile.makeProfileMap(INanoTime.testNanoTime());
+        p1.profileE("one", () -> "hello");
+        var p2 = p1.withPrefix("p2");
+        p2.profileE("one", () -> "hello");
+        var p3 = p1.withPrefix("p3");
+        p3.profileE("one", () -> "hello");
+        p3.profileE("two", () -> "hello");
+        assertEquals("one    {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
+                "p2.one {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
+                "p3.one {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
+                "p3.two {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", p1.print());
     }
 
     private void addOneToEachBucket(IProfile p, String name, int amt) {
@@ -110,4 +116,6 @@ class IProfileTest {
         p.add(name, onesec * amt);
         p.add(name, tenSec * amt);
     }
+
+
 }

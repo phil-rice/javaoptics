@@ -9,8 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public interface IProfile {
-    static IProfile makeProfileMap(INanoTime nanoTime) {return new ProfileImpl(new ConcurrentHashMap<>(), nanoTime);}
+    static IProfile makeProfileMap(INanoTime nanoTime) {return new ProfileImpl("", new ConcurrentHashMap<>(), nanoTime);}
     String print();
+    IProfile withPrefix(String prefix);
 
     <T, E extends Exception> T profileE(String name, SupplierWithExceptionE<T, E> fn) throws E;
     <T> T profile(String name, Supplier<T> fn);

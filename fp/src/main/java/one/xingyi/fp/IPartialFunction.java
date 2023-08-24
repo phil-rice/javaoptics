@@ -101,7 +101,7 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
             if (pfns.size() != booleans.size())
                 throw new IllegalArgumentException("Software error: pfns and booleans must be the same size. Pfns: " + pfns.size() + " booleans " + booleans.size() + " ->" + booleans);
             for (int i = 0; i < pfns.size(); i++)
-                if ((pfns.get(i) instanceof PartialFunctionAlwaysTrue) && !booleans.get(i))
+                if ((pfns.get(i) instanceof IPartialFunctionAlwaysTrue) && !booleans.get(i))
                     return false;
             return true;
         };

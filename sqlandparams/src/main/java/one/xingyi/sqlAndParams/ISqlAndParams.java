@@ -15,7 +15,7 @@ import static one.xingyi.fp.Safe.safeString;
 
 
 public interface ISqlAndParams {
-    static <Req> Function<Req, ISqlAndParams> mergeLists(List<List<IPartialFunction<Req, ISqlAndParams>>> list) {
+    static <Req> Function<Req, ISqlAndParams>   mergeLists(List<List<IPartialFunction<Req, ISqlAndParams>>> list) {
         List<Function<Req, ISqlAndParams>> listOrResultFns = ListHelpers.map(list, l -> IPartialFunction.mapReduceFn(l, ISqlAndParams::merge));
         return req -> mergePreAndPostsIntoPres(ListHelpers.map(listOrResultFns, fn -> fn.apply(req)));
     }
