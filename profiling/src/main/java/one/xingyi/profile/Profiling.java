@@ -1,13 +1,22 @@
 package one.xingyi.profile;
 
 import lombok.var;
+import one.xingyi.helpers.ListHelpers;
+import one.xingyi.helpers.MapHelpers;
 import one.xingyi.interfaces.INanoTime;
 
 import javax.management.*;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Profiling implements ProfilingMBean {
     final IProfile profile;
+    final static List<Profiling> allProfiling = new ArrayList<>();
+
+   public static String printAll() {
+        return String.join("\n", ListHelpers.map(allProfiling, p -> p.profile.print()));
+    }
 
     private INanoTime nanoTime;
     final String packageName;
@@ -16,6 +25,7 @@ public class Profiling implements ProfilingMBean {
         this.nanoTime = nanoTime;
         this.packageName = packageName;
         profile = IProfile.makeProfileMap(nanoTime).withPrefix(packageName);
+        allProfiling.add(this);
     }
 
     public IProfile registerWithPrefix(String prefix) {

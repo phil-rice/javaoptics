@@ -6,7 +6,7 @@
   <parent>
     <groupId>one.xingyi</groupId>
     <artifactId>parent</artifactId>
-    <version>1.2.7-SNAPSHOT</version>
+    <version>1.2.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>fp</artifactId>

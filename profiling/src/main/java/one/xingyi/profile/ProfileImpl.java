@@ -27,7 +27,11 @@ class ProfileImpl implements IProfile {
     @Override
     public String print() {
         int nanosToMs = 1000000;
-        return MapHelpers.print(map, (k, v) -> "{count: " + v.mapAndAdd(pb -> pb.count.get(), Integer::sum) + ", time: " + v.mapAndAdd(pb -> pb.total.get(), Long::sum) / nanosToMs + ", avg: " + v.mapAndAdd(ProfileBucket::avg, Long::sum) / nanosToMs + ", <10ms:" + v.lessThan10ms + ", <100ms:" + v.lessThan100ms + ", <1s:" + v.lessThan1s + ", <10s:" + v.lessThan10s + ", rest:" + v.rest + '}');
+        return MapHelpers.print(map, (k, v) -> {
+            long time = v.mapAndAdd(pb -> pb.total.get(), Long::sum) / nanosToMs;
+            int count = v.mapAndAdd(pb -> pb.count.get(), Integer::sum);
+            return "{count: " + count + ", time: " + time + ", avg: " + (time / count) + ", <10ms:" + v.lessThan10ms + ", <100ms:" + v.lessThan100ms + ", <1s:" + v.lessThan1s + ", <10s:" + v.lessThan10s + ", rest:" + v.rest + '}';
+        });
     }
 
     @Override
