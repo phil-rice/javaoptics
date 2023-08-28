@@ -15,12 +15,12 @@ class ISqlAndParamsTestTest {
 
     @Test
     void testChecksForLegalSqlUnhappyCases() throws JSQLParserException {
-        assertEquals("Empty sql", assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlLegal("")).getMessage());
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from from"));
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlLegal("select '1 from dual"));
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from dual*"));
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from dual where"));
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from dual where 1=1 and"));
+        assertEquals("Empty sql", assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("")).getMessage());
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from from"));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("select '1 from dual"));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from dual*"));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from dual where"));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("select 1 from dual where 1=1 and"));
     }
     @Test
     void testChecksForLegalSqlHappyCases() throws JSQLParserException {
@@ -39,9 +39,9 @@ class ISqlAndParamsTestTest {
     }
     @Test
     void testIsLegalSqlAndParamsBadSql() {
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("select * from", "")));
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("", "table")));
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("select * from", "where 1=1")));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("select * from", "")));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("", "table")));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("select * from", "where 1=1")));
     }
 
     @Test
@@ -50,6 +50,12 @@ class ISqlAndParamsTestTest {
         assertThrows(SqlAndParamsMismatchException.class, () -> ISqlAndParamsTest.checkSqlAndParamsLegal(ISqlAndParams.of("select 1 from dual where ?=1 and ?=2", "", "1")));
     }
 
+    @Test
+    void testCheckLegalSqlGivesNiceMessage(){
+        var e = assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("select * from"));
+        assertEquals("Malformed SQL :\nselect * from", e.getMessage());
+        assertEquals("select * from", e.sql);
+    }
     @RequiredArgsConstructor
     @ToString
     @Getter
@@ -79,7 +85,7 @@ class ISqlAndParamsTestTest {
         ISqlAndParamsTest.checkSqlAndParamsPfnListLegal(reqEmpty, list012);
         ISqlAndParamsTest.checkSqlAndParamsPfnListLegal(reqFull, list012);
 
-        assertThrows(JSQLParserException.class, () -> ISqlAndParamsTest.checkSqlAndParamsPfnListLegal(reqFull, brokenlist));
+        assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlAndParamsPfnListLegal(reqFull, brokenlist));
     }
 
     @Test

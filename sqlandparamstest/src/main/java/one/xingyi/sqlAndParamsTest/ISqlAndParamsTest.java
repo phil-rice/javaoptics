@@ -13,17 +13,26 @@ import java.util.List;
 
 public interface ISqlAndParamsTest {
 
-    static void checkSqlLegal(String sql) throws JSQLParserException {
-        if (sql.trim().length() == 0) throw new JSQLParserException("Empty sql"); CCJSqlParserUtil.parse(sql);
+    static void checkSqlLegal(String sql) throws MalformedSqlException {
+        if (sql.trim().length() == 0) throw MalformedSqlException.emptySql();
+        try {
+            CCJSqlParserUtil.parse(sql);
+        } catch (JSQLParserException e) {
+            throw new MalformedSqlException(sql, e);
+        }
+
     }
+
     static void checkParamsCountAgainstSql(ISqlAndParams sqlAndParams) {
-        String sql = sqlAndParams.getFullSql(); long count = sql.chars().filter(c -> c == '?').count();
-        int paramsCount = sqlAndParams.getParams().size(); if (count != paramsCount)
+        String sql = sqlAndParams.getFullSql();
+        long count = sql.chars().filter(c -> c == '?').count();
+        int paramsCount = sqlAndParams.getParams().size();
+        if (count != paramsCount)
             throw new SqlAndParamsMismatchException("SqlAndParams mismatch. Count of ?s " + count + " and params " + paramsCount + "\nSql: " + sql + "\nparams: " + sqlAndParams.getParams());
     }
 
 
-    static void checkSqlAndParamsLegal(ISqlAndParams sqlAndParams) throws JSQLParserException {
+    static void checkSqlAndParamsLegal(ISqlAndParams sqlAndParams) {
         String sql = sqlAndParams.getFullSql();
         checkSqlLegal(sql);
         checkParamsCountAgainstSql(sqlAndParams);
@@ -33,9 +42,11 @@ public interface ISqlAndParamsTest {
         ISqlAndParams merged = IPartialFunction.mapReduceFn(pfnList, ISqlAndParams::merge).apply(req);
         checkSqlAndParamsLegal(merged);
     }
+
     static <Req> void testPermutations(Req req, List<IPartialFunction<Req, ISqlAndParams>> pfnList) {
         testPermutations(req, pfnList, true);
     }
+
     static <Req> void testPermutations(Req req, List<IPartialFunction<Req, ISqlAndParams>> pfnList, boolean throwExceptionIfNotDefined) {
         IPartialFunction.forEachPermutation(pfnList, req, (booleans, list) -> {
             var merged = ISqlAndParams.merge(list);
