@@ -1,6 +1,7 @@
 package one.xingyi.profile;
 
 import one.xingyi.helpers.MapHelpers;
+import one.xingyi.helpers.StringHelper;
 import one.xingyi.interfaces.INanoTime;
 import one.xingyi.interfaces.RunnableWithExceptionE;
 import one.xingyi.interfaces.SupplierWithExceptionE;
@@ -9,10 +10,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-class ProfileImpl implements IProfile {
-    private final ConcurrentHashMap<String, ProfileBuckets<ProfileBucket>> map;
+class ProfileImpl implements IProfile, IProfileBuilder, IProfileDetailedInfo, IProfileControl {
+    final ConcurrentHashMap<String, ProfileBuckets<ProfileBucket>> map;
     private final String prefix;
     final INanoTime nanoTime;
+    long mainSnapshot = 0;
+    String main;
 
     public ProfileImpl(String prefix, ConcurrentHashMap<String, ProfileBuckets<ProfileBucket>> map, INanoTime nanoTime) {
         this.prefix = prefix;
@@ -20,17 +23,55 @@ class ProfileImpl implements IProfile {
         this.nanoTime = nanoTime;
     }
 
-    public IProfile withPrefix(String prefix) {
+    public IProfileBuilder main(String name) {
+        main = name;
+        return this;
+    }
+
+    public IProfileBuilder withPrefix(String prefix) {
         return new ProfileImpl(this.prefix + prefix + ".", map, nanoTime);
+    }
+
+    static IProfileInfo fromProfileBuckets(ProfileBuckets<ProfileBucket> bs, long mainSnapshot) {
+        return new IProfileInfo() {
+            @Override
+            public int count() {
+                return bs.mapAndAdd(pb -> pb.count.get(), Integer::sum);
+            }
+
+            @Override
+            public long total() {
+                return bs.mapAndAdd(pb -> pb.total.get(), Long::sum);
+            }
+
+            @Override
+            public long snapshot() {
+                return mainSnapshot;
+            }
+        };
+    }
+
+    @Override
+    public IProfileInfo mainProfileInfo() {
+        return fromProfileBuckets(getBucketAddingIfNeeded(prefix), mainSnapshot);
     }
 
     @Override
     public String print() {
         int nanosToMs = 1000000;
-        return MapHelpers.print(map, (k, v) -> {
+        return MapHelpers.jsonPrint(",\n", map, (k, v) -> {
             long time = v.mapAndAdd(pb -> pb.total.get(), Long::sum) / nanosToMs;
             int count = v.mapAndAdd(pb -> pb.count.get(), Integer::sum);
-            return "{count: " + count + ", time: " + time + ", avg: " + (time / count) + ", <10ms:" + v.lessThan10ms + ", <100ms:" + v.lessThan100ms + ", <1s:" + v.lessThan1s + ", <10s:" + v.lessThan10s + ", rest:" + v.rest + '}';
+            long avg = count == 0 ? 0 : time / count;
+            return StringHelper.toJsonObject(
+                    "count", count,
+                    "time", time,
+                    "avg", avg,
+                    "<10ms", v.lessThan10ms,
+                    "<100ms", v.lessThan100ms,
+                    "<1s", v.lessThan1s,
+                    "<10s", v.lessThan10s,
+                    "rest", v.rest);
         });
     }
 
@@ -78,10 +119,16 @@ class ProfileImpl implements IProfile {
     @Override
     public void add(String name, long duration) {
         String fullName = prefix + name;
-        boolean isIn = map.contains(fullName);
-        ProfileBuckets<ProfileBucket> bucket = map.getOrDefault(fullName, ProfileBuckets.create());
+        if (name.equals(main)) mainSnapshot = duration;
+        ProfileBuckets<ProfileBucket> bucket = getBucketAddingIfNeeded(fullName);
         ProfileBuckets.add(bucket, duration);
+    }
+
+    private ProfileBuckets<ProfileBucket> getBucketAddingIfNeeded(String fullName) {
+        boolean isIn = map.containsKey(fullName);
+        ProfileBuckets<ProfileBucket> bucket = map.getOrDefault(fullName, ProfileBuckets.create());
         if (!isIn) map.put(fullName, bucket);
+        return bucket;
     }
 
     @Override

@@ -1,7 +1,8 @@
 package one.xingyi.profile;
 
-public interface ProfilingMBean {
-    String getProfiles();
+public interface ProfilingMBean extends IProfileInfo {
+
+    String print();
 
     void clear();
 }

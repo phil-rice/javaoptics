@@ -1,10 +1,7 @@
 package one.xingyi.helpers;
 
-import one.xingyi.interfaces.FunctionWithExceptionE;
-
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public interface MapHelpers {
     static <K, V, V1> Map<K, V1> map(Map<K, V> map, BiFunction<K, V, V1> fn) {
@@ -14,16 +11,20 @@ public interface MapHelpers {
         return result;
     }
 
-    static <V> String print(Map<String, V> map, BiFunction<String, V, String> fn) {
+    static <V> String jsonPrint(String separator, Map<String, V> map, BiFunction<String, V, String> fn) {
         StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
         List<String> list = new ArrayList<>(map.keySet());
         Collections.sort(list);
-        int maxLength = list.stream().mapToInt(String::length).max().orElse(0);
+        int maxLength = list.stream().mapToInt(String::length).max().orElse(0) + 2;
         for (String key : list) {
-            if (sb.length() > 0) sb.append("\n");
-            sb.append(String.format("%-" + maxLength + "s", key));
-            sb.append(" ");
+            if (sb.length() > 2) sb.append(separator);
+            sb.append("  ");
+            sb.append(String.format("%-" + maxLength + "s", StringHelper.doubleQuote.apply(key)));
+            sb.append(":");
             sb.append(fn.apply(key, map.get(key)));
-        } return sb.toString();
+        }
+        sb.append("\n}");
+        return sb.toString();
     }
 }

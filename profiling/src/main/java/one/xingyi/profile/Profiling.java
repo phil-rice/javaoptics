@@ -2,7 +2,6 @@ package one.xingyi.profile;
 
 import lombok.var;
 import one.xingyi.helpers.ListHelpers;
-import one.xingyi.helpers.MapHelpers;
 import one.xingyi.interfaces.INanoTime;
 
 import javax.management.*;
@@ -11,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Profiling implements ProfilingMBean {
-    final IProfile profile;
+    final ProfileImpl profile;
     final static List<Profiling> allProfiling = new ArrayList<>();
 
-   public static String printAll() {
+    public static String printAll() {
         return String.join("\n", ListHelpers.map(allProfiling, p -> p.profile.print()));
     }
 
@@ -24,7 +23,7 @@ public class Profiling implements ProfilingMBean {
     public Profiling(INanoTime nanoTime, String packageName) {
         this.nanoTime = nanoTime;
         this.packageName = packageName;
-        profile = IProfile.makeProfileMap(nanoTime).withPrefix(packageName);
+        profile = (ProfileImpl) IProfile.makeProfileMap(nanoTime).withPrefix(packageName);
         allProfiling.add(this);
     }
 
@@ -34,7 +33,8 @@ public class Profiling implements ProfilingMBean {
         return mBean.profile;
     }
 
-    public String getProfiles() {
+    @Override
+    public String print() {
         return profile.print();
     }
 
@@ -64,5 +64,24 @@ public class Profiling implements ProfilingMBean {
             p2.add("test21", 100);
             p2.add("test22", 100);
         }
+    }
+
+    IProfileInfo mainProfileInfo() {
+        return profile.mainProfileInfo();
+    }
+
+    @Override
+    public int count() {
+        return mainProfileInfo().count();
+    }
+
+    @Override
+    public long total() {
+        return mainProfileInfo().total();
+    }
+
+    @Override
+    public long snapshot() {
+        return mainProfileInfo().snapshot();
     }
 }

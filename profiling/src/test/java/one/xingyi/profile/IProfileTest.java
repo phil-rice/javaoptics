@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static one.xingyi.helpers.StringHelper.toSingleQuotes;
+import static one.xingyi.profile.IProfileDetailedInfo.from;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IProfileTest {
@@ -25,8 +27,9 @@ class IProfileTest {
         Map<String, ProfileBuckets<Long>> expected = new HashMap<>();
         expected.put("one", new ProfileBuckets<>(1L, 10L, 100L, 1000L, 10000L));
         expected.put("two", new ProfileBuckets<>(1L, 10L, 100L, 1000L, 10000L));
-        assertEquals(expected, p.getMs());
+        assertEquals(expected, from(p).getMs());
     }
+
     @Test
     void testAddingSomeNumbersAndTheAvg2() {
         IProfile p = IProfile.makeProfileMap(INanoTime.testNanoTime());
@@ -36,7 +39,7 @@ class IProfileTest {
         Map<String, ProfileBuckets<Long>> expected = new HashMap<>();
         expected.put("one", new ProfileBuckets<>(2L, 20L, 200L, 2000L, 20000L));
         expected.put("two", new ProfileBuckets<>(1L, 10L, 100L, 1000L, 10000L));
-        assertEquals(expected, p.getMs());
+        assertEquals(expected, from(p).getMs());
     }
 
     @Test
@@ -47,8 +50,9 @@ class IProfileTest {
         Map<String, ProfileBuckets<Integer>> expected = new HashMap<>();
         expected.put("one", new ProfileBuckets<>(1, 1, 1, 1, 1));
         expected.put("two", new ProfileBuckets<>(1, 1, 1, 1, 1));
-        assertEquals(expected, p.getCounts());
+        assertEquals(expected, from(p).getCounts());
     }
+
     @Test
     void testAddingSomeNumbersAndTheCounts3() {
         IProfile p = IProfile.makeProfileMap(INanoTime.testNanoTime());
@@ -59,7 +63,7 @@ class IProfileTest {
         Map<String, ProfileBuckets<Integer>> expected = new HashMap<>();
         expected.put("one", new ProfileBuckets<>(3, 3, 3, 3, 3));
         expected.put("two", new ProfileBuckets<>(1, 1, 1, 1, 1));
-        assertEquals(expected, p.getCounts());
+        assertEquals(expected, from(p).getCounts());
     }
 
     @Test
@@ -71,9 +75,10 @@ class IProfileTest {
         Map<String, Long> expected = new HashMap<>();
         expected.put("one", 22222L);
         expected.put("two", 11111L);
-        assertEquals(expected, p.getTotalAvg());
+        assertEquals(expected, from(p).getTotalAvg());
 
     }
+
     @Test
     void testGetTotalCounts() {
         IProfile p = IProfile.makeProfileMap(INanoTime.testNanoTime());
@@ -83,20 +88,23 @@ class IProfileTest {
         Map<String, Integer> expected = new HashMap<>();
         expected.put("one", 10);
         expected.put("two", 5);
-        assertEquals(expected, p.getTotalCounts());
+        assertEquals(expected, from(p).getTotalCounts());
     }
+
     @Test
     void testProfile() {
-        IProfile p = IProfile.makeProfileMap(INanoTime.testNanoTime());
+        IProfile p = IProfile.makeProfileMap(INanoTime.testNanoTime()).main("one");
         p.profile("one", () -> "hello");
         p.profile("one", () -> "hello");
         p.profile("two", () -> "hello");
-        assertEquals("one {count: 2, time: 2, avg: 1, <10ms:{count=2,total=2,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
-                "two {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", p.print());
+        assertEquals("{'one':{'count':2,'time':2,'avg':1,'<10ms':{'count':2,'total':2,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}},\n" +
+                "'two':{'count':1,'time':1,'avg':1,'<10ms':{'count':1,'total':1,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}}}" +
+                "", toSingleQuotes(p.print()));
     }
+
     @Test
     void testProfileE() {
-        IProfile p1 = IProfile.makeProfileMap(INanoTime.testNanoTime());
+        IProfileBuilder p1 = IProfile.makeProfileMap(INanoTime.testNanoTime());
         p1.profileE("one", () -> "hello");
         var p2 = p1.withPrefix("p2");
         p2.profileE("one", () -> "hello");
@@ -106,7 +114,7 @@ class IProfileTest {
         assertEquals("one    {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
                 "p2.one {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
                 "p3.one {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
-                "p3.two {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", p1.print());
+                "p3.two {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", toSingleQuotes(p1.print()));
     }
 
     private void addOneToEachBucket(IProfile p, String name, int amt) {
@@ -117,5 +125,18 @@ class IProfileTest {
         p.add(name, tenSec * amt);
     }
 
+    @Test
+    void testNoMainAndSnapshot() {
+        IProfileBuilder p1 = IProfile.makeProfileMap(INanoTime.testNanoTime());
+        p1.profileE("one", () -> "hello");
+        assertEquals(0, p1.mainProfileInfo().snapshot());
+    }
+
+    @Test
+    void testMainAndSnapshot() {
+        IProfileBuilder p1 = IProfile.makeProfileMap(INanoTime.testNanoTime()).main("one");
+        p1.profileE("one", () -> "hello");
+        assertEquals(1000000L, p1.mainProfileInfo().snapshot());
+    }
 
 }

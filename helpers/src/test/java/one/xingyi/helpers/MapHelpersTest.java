@@ -18,11 +18,13 @@ class MapHelpersTest {
         map.put("4four", 4);
         map.put("5longlonglongname", 5);
         assertEquals(
-                "1one              1x\n" +
-                        "2two              2x\n" +
-                        "3three            3x\n" +
-                        "4four             4x\n" +
-                        "5longlonglongname 5x", MapHelpers.print(map, (k,i) -> k + "="+ i));
+                "{\n" +
+                        "  \"1one\"             :1one=1\n" +
+                        "  \"2two\"             :2two=2\n" +
+                        "  \"3three\"           :3three=3\n" +
+                        "  \"4four\"            :4four=4\n" +
+                        "  \"5longlonglongname\":5longlonglongname=5\n" +
+                        "}", MapHelpers.jsonPrint("\n", map, (k, i) -> k + "=" + i));
 
     }
 

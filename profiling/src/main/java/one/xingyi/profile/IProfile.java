@@ -9,25 +9,21 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public interface IProfile {
-    static IProfile makeProfileMap(INanoTime nanoTime) {
-        return new ProfileImpl("", new ConcurrentHashMap<>(), nanoTime);
+interface IProfileBuilder extends IProfile {
+    IProfileBuilder withPrefix(String prefix);
+
+    IProfileBuilder main(String name);
+}
+
+interface IProfileControl {
+    void clear();
+}
+
+interface IProfileDetailedInfo {
+    static IProfileDetailedInfo from(IProfile p) {
+        if (p instanceof ProfileImpl) return (IProfileDetailedInfo) p;
+        throw new IllegalArgumentException("Can only get detailed info from a ProfileImpl. Was " + p.getClass().getName());
     }
-
-
-    String print();
-
-    IProfile withPrefix(String prefix);
-
-    <T, E extends Exception> T profileE(String name, SupplierWithExceptionE<T, E> fn) throws E;
-
-    <T> T profile(String name, Supplier<T> fn);
-
-    void run(String name, Runnable fn);
-
-    <E extends Exception> void runE(String name, RunnableWithExceptionE<E> fn) throws E;
-
-    void add(String name, long duration);
 
     Map<String, ProfileBuckets<Long>> getMs();
 
@@ -36,6 +32,27 @@ public interface IProfile {
     Map<String, Integer> getTotalCounts();
 
     Map<String, Long> getTotalAvg();
+}
 
-    void clear();
+public interface IProfile {
+    static IProfileBuilder makeProfileMap(INanoTime nanoTime) {
+        return new ProfileImpl("", new ConcurrentHashMap<>(), nanoTime);
+    }
+
+    IProfileInfo mainProfileInfo();
+
+    String print();
+
+    <T, E extends Exception> T profileE(String name, SupplierWithExceptionE<T, E> fn) throws E;
+
+    <T> T profile(String name, Supplier<T> fn);
+
+    void run(String name, Runnable fn);
+
+
+    <E extends Exception> void runE(String name, RunnableWithExceptionE<E> fn) throws E;
+
+    void add(String name, long duration);
+
+
 }
