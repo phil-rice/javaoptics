@@ -19,17 +19,17 @@ public class ProfileBucket implements IProfileBucket {
 
 
     @Override
-    public int count() {
+    public int getCount() {
         return count.get();
     }
 
     @Override
-    public long total() {
+    public long getTotal() {
         return total.get();
     }
 
     @Override
-    public long snapshot() {
+    public long getSnapshot() {
         return snapshot;
     }
 
@@ -38,6 +38,6 @@ public class ProfileBucket implements IProfileBucket {
         int nanosToMs = 1000000;
         int c = count.get();
         long totalL = total.get() / nanosToMs;
-        return toJsonObject("count", c, "total", totalL, "avg", avg()/nanosToMs, "snapshot", snapshot / nanosToMs);
+        return toJsonObject("count", c, "total", totalL, "avg", getAvg()/nanosToMs, "snapshot", snapshot / nanosToMs);
     }
 }

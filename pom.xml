@@ -6,7 +6,7 @@
 
   <groupId>one.xingyi</groupId>
   <artifactId>parent</artifactId>
-  <version>1.3.2</version>
+  <version>1.3.11-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>javaOptics</name>
   <description>Tools for handling immutability in Java using optics</description>
@@ -52,37 +52,37 @@
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>optics</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>fp</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>helpers</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>processors</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>rawprocessors</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>interfaces</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>sqlandparams</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>

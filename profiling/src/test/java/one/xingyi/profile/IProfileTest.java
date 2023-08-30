@@ -1,7 +1,6 @@
 package one.xingyi.profile;
 
 import lombok.var;
-import one.xingyi.helpers.MapHelpers;
 import one.xingyi.interfaces.INanoTime;
 import org.junit.jupiter.api.Test;
 
@@ -97,9 +96,10 @@ class IProfileTest {
         p.profile("one", () -> "hello");
         p.profile("one", () -> "hello");
         p.profile("two", () -> "hello");
-        assertEquals("{'one':{'count':2,'time':2,'avg':1,'<10ms':{'count':2,'total':2,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}},\n" +
-                "'two':{'count':1,'time':1,'avg':1,'<10ms':{'count':1,'total':1,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}}}" +
-                "", toSingleQuotes(p.print()));
+        assertEquals("{\n" +
+                "  'one':{'count':2,'time':2,'avg':1,'<10ms':{'count':2,'total':2,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}},\n" +
+                "  'two':{'count':1,'time':1,'avg':1,'<10ms':{'count':1,'total':1,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}}\n" +
+                "}", toSingleQuotes(p.print()));
     }
 
     @Test
@@ -111,10 +111,12 @@ class IProfileTest {
         var p3 = p1.withPrefix("p3");
         p3.profileE("one", () -> "hello");
         p3.profileE("two", () -> "hello");
-        assertEquals("one    {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
-                "p2.one {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
-                "p3.one {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}\n" +
-                "p3.two {count: 1, time: 1, avg: 1, <10ms:{count=1,total=1,avg=1}, <100ms:{count=0,total=0,avg=0}, <1s:{count=0,total=0,avg=0}, <10s:{count=0,total=0,avg=0}, rest:{count=0,total=0,avg=0}}", toSingleQuotes(p1.print()));
+        assertEquals("{\n" +
+                "  'one'   :{'count':1,'time':1,'avg':1,'<10ms':{'count':1,'total':1,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}},\n" +
+                "  'p2.one':{'count':1,'time':1,'avg':1,'<10ms':{'count':1,'total':1,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}},\n" +
+                "  'p3.one':{'count':1,'time':1,'avg':1,'<10ms':{'count':1,'total':1,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}},\n" +
+                "  'p3.two':{'count':1,'time':1,'avg':1,'<10ms':{'count':1,'total':1,'avg':1,'snapshot':1},'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0},'<1s':{'count':0,'total':0,'avg':0,'snapshot':0},'<10s':{'count':0,'total':0,'avg':0,'snapshot':0},'rest':{'count':0,'total':0,'avg':0,'snapshot':0}}\n" +
+                "}", toSingleQuotes(p1.print()));
     }
 
     private void addOneToEachBucket(IProfile p, String name, int amt) {
@@ -129,14 +131,14 @@ class IProfileTest {
     void testNoMainAndSnapshot() {
         IProfileBuilder p1 = IProfile.makeProfileMap(INanoTime.testNanoTime());
         p1.profileE("one", () -> "hello");
-        assertEquals(0, p1.mainProfileInfo().snapshot());
+        assertEquals(0, p1.mainProfileInfo().getSnapshot());
     }
 
     @Test
     void testMainAndSnapshot() {
         IProfileBuilder p1 = IProfile.makeProfileMap(INanoTime.testNanoTime()).main("one");
         p1.profileE("one", () -> "hello");
-        assertEquals(1000000L, p1.mainProfileInfo().snapshot());
+        assertEquals(1000000L, p1.mainProfileInfo().getSnapshot());
     }
 
 }

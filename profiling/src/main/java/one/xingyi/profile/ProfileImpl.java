@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 class ProfileImpl implements IProfile, IProfileBuilder, IProfileDetailedInfo, IProfileControl {
     final ConcurrentHashMap<String, ProfileBuckets<ProfileBucket>> map;
-    private final String prefix;
+    final String prefix;
     final INanoTime nanoTime;
     long mainSnapshot = 0;
     String main;
@@ -35,17 +35,17 @@ class ProfileImpl implements IProfile, IProfileBuilder, IProfileDetailedInfo, IP
     static IProfileInfo fromProfileBuckets(ProfileBuckets<ProfileBucket> bs, long mainSnapshot) {
         return new IProfileInfo() {
             @Override
-            public int count() {
+            public int getCount() {
                 return bs.mapAndAdd(pb -> pb.count.get(), Integer::sum);
             }
 
             @Override
-            public long total() {
+            public long getTotal() {
                 return bs.mapAndAdd(pb -> pb.total.get(), Long::sum);
             }
 
             @Override
-            public long snapshot() {
+            public long getSnapshot() {
                 return mainSnapshot;
             }
         };
@@ -53,12 +53,13 @@ class ProfileImpl implements IProfile, IProfileBuilder, IProfileDetailedInfo, IP
 
     @Override
     public IProfileInfo mainProfileInfo() {
-        return fromProfileBuckets(getBucketAddingIfNeeded(prefix), mainSnapshot);
+        return fromProfileBuckets(getBucketAddingIfNeeded(prefix + main), mainSnapshot);
     }
+
+    final static int nanosToMs = 1000000;
 
     @Override
     public String print() {
-        int nanosToMs = 1000000;
         return MapHelpers.jsonPrint(",\n", map, (k, v) -> {
             long time = v.mapAndAdd(pb -> pb.total.get(), Long::sum) / nanosToMs;
             int count = v.mapAndAdd(pb -> pb.count.get(), Integer::sum);
@@ -133,7 +134,7 @@ class ProfileImpl implements IProfile, IProfileBuilder, IProfileDetailedInfo, IP
 
     @Override
     public Map<String, ProfileBuckets<Long>> getMs() {
-        return MapHelpers.map(map, (k, v) -> v.map(b -> b.avg() / 1000000));
+        return MapHelpers.map(map, (k, v) -> v.map(b -> b.getAvg() / 1000000));
     }
 
     @Override

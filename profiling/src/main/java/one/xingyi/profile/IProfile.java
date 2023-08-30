@@ -9,25 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-interface IProfileControl {
-    void clear();
-}
-
-interface IProfileDetailedInfo {
-    static IProfileDetailedInfo from(IProfile p) {
-        if (p instanceof ProfileImpl) return (IProfileDetailedInfo) p;
-        throw new IllegalArgumentException("Can only get detailed info from a ProfileImpl. Was " + p.getClass().getName());
-    }
-
-    Map<String, ProfileBuckets<Long>> getMs();
-
-    Map<String, ProfileBuckets<Integer>> getCounts();
-
-    Map<String, Integer> getTotalCounts();
-
-    Map<String, Long> getTotalAvg();
-}
-
 public interface IProfile {
     static IProfileBuilder makeProfileMap(INanoTime nanoTime) {
         return new ProfileImpl("", new ConcurrentHashMap<>(), nanoTime);

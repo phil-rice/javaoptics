@@ -1,15 +1,15 @@
 package one.xingyi.profile;
 
 public interface IProfileInfo {
-    default long avg() {
-        int n = count();
-        long t = total();
+    default long getAvg() {
+        int n = getCount();
+        long t = getTotal();
         return n == 0 ? 0 : t / n;
     }
 
-    int count();
+    int getCount();
 
-    long total();
+    long getTotal();
 
-    long snapshot();
+    long getSnapshot();
 }
