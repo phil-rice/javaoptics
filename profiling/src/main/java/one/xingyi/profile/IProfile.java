@@ -9,12 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-interface IProfileBuilder extends IProfile {
-    IProfileBuilder withPrefix(String prefix);
-
-    IProfileBuilder main(String name);
-}
-
 interface IProfileControl {
     void clear();
 }
