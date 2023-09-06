@@ -73,16 +73,19 @@ public interface IPartialFunction<From, To> extends Function<From, To> {
         };
     }
     static <From, To, Result> Function<From, Result> mapReduceFn(Collection<IPartialFunction<From, To>> fns, Function<List<To>, Result> reduceFn) {
-        var fn = mapFn(fns);
-        return from -> reduceFn.apply(fn.apply(from));
-    }
-    static <From, To> Function<From, To> chain(To defValue, Collection<IPartialFunction<From, To>> fns) {
+        Function<From, List<To>> fn = mapFn(fns);
         return from -> {
+            List<To> tos = fn.apply(from);
+            return reduceFn.apply(tos);
+        };
+    }
+    static <From, To> IPartialFunction<From, To> chainToFn(Function<From, To> defValue, Collection<IPartialFunction<From, To>> fns) {
+        return IPartialFunction.always(from -> {
             for (IPartialFunction<From, To> fn : fns)
                 if (fn.isDefinedAt(from))
                     return fn.apply(from);
-            return defValue;
-        };
+            return defValue.apply(from);
+        });
     }
     static <From, To> IPartialFunction<From, To> chainToPf(Collection<IPartialFunction<From, To>> pfs) {
         return IPartialFunction.of(

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.var;
-import one.xingyi.helpers.Permutations;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IPartialFunctionTest {
-
 
     Predicate<String> isHello = s -> s.equals("hello");
     Predicate<String> hasO = s -> s.contains("o");
@@ -123,21 +121,31 @@ class IPartialFunctionTest {
     @Test
     void testMapReduceOfListsOfListsFn() {
         List<IPartialFunction<String, String>> list1 = Arrays.asList(helloPf, goodbyePf);
+        var pf1 = IPartialFunction.mapReduceFn(list1, list ->
+                String.join(":", list));
+        assertEquals("HELLO", pf1.apply("hello"));
+        assertEquals("GOODBYE", pf1.apply("goodbye"));
+        assertEquals("", pf1.apply("xxx"));
+    }
+    @Test
+    void testMapReduceOfListsOfListsFn2() {
         List<IPartialFunction<String, String>> list2 = Arrays.asList(hasEPf, hasOPf);
-        var pf = IPartialFunction.mapReduceFn(list1, list -> String.join(":", list));
-        assertEquals("HELLO:hello contains e:hello contains o", pf.apply("hello"));
-        assertEquals("GOODBYE:goodbye contains e:goodbye contains o", pf.apply("goodbye"));
-
+        var pf2 = IPartialFunction.mapReduceFn(list2, list -> String.join(":", list));
+        assertEquals("hello contains e:hello contains o", pf2.apply("hello"));
+        assertEquals("", pf2.apply("xxx"));
     }
 
     @Test
-    void testChain() {
-        var chained = IPartialFunction.chain("DefValue", Arrays.asList(helloPf, goodbyePf, hasEPf, hasOPf));
+    void testChainTo() {
+        IPartialFunction chained = IPartialFunction.chainToFn(from -> from + "_def", Arrays.asList(helloPf, goodbyePf, hasEPf, hasOPf));
         assertEquals("HELLO", chained.apply("hello"));
         assertEquals("GOODBYE", chained.apply("goodbye"));
         assertEquals("has o contains o", chained.apply("has o"));
         assertEquals("has e contains e", chained.apply("has e"));
-        assertEquals("DefValue", chained.apply("withOut O Or E"));
+        assertEquals("withOut O Or E_def", chained.apply("withOut O Or E"));
+        assertTrue(chained.isDefinedAt("withOut O Or E_def"));
+        assertTrue(chained instanceof IPartialFunctionAlwaysTrue);
+
     }
     @Test
     void testChainPf() {
