@@ -2,6 +2,8 @@ package one.xingyi.helpers;
 
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface MapHelpers {
     static <K, V, V1> Map<K, V1> map(Map<K, V> map, BiFunction<K, V, V1> fn) {
@@ -26,5 +28,15 @@ public interface MapHelpers {
         }
         sb.append("\n}");
         return sb.toString();
+    }
+
+    static <K, V> V getOrAdd(Map<K, V> map, K key, Supplier< V> fn) {
+        V result = map.get(key);
+        if (result == null) {
+            V value = fn.get();
+            map.put(key, value);
+            return value;
+        }
+        return result;
     }
 }

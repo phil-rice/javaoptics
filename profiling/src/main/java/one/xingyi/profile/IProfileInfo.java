@@ -1,15 +1,27 @@
 package one.xingyi.profile;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import one.xingyi.helpers.NumberHelpers;
+
 public interface IProfileInfo {
-    default long getAvg() {
-        int n = getCount();
-        long t = getTotal();
-        return n == 0 ? 0 : t / n;
-    }
-
     int getCount();
+    long getTotalMs();
+    long getSnapshotMs();
+    String getPath();
 
-    long getTotal();
+    default long getAvgMs() {return NumberHelpers.avg(getTotalMs(), getCount());}
+}
 
-    long getSnapshot();
+@RequiredArgsConstructor
+@Getter
+@ToString
+@EqualsAndHashCode
+class ProfileInfo implements IProfileInfo {
+    final String path;
+    final int count;
+    final long totalMs;
+    final long snapshotMs;
 }

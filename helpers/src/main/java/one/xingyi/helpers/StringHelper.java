@@ -22,6 +22,9 @@ public interface StringHelper {
     static String toSingleQuotes(String s) {
         return s.replaceAll("\"", "'");
     }
+    static String toDoubleQuotes(String s) {
+        return s.replaceAll("'", "\"");
+    }
 
     static String toJsonObject(Object... avs) {
         return "{" + toAttributeValue(",", avs) + "}";
