@@ -5,6 +5,8 @@ import one.xingyi.interfaces.RunnableWithExceptionE;
 import one.xingyi.interfaces.SupplierWithExceptionE;
 import one.xingyi.profile.pathmap.IPathMap;
 
+import java.util.function.Consumer;
+
 public interface IProfile {
     /**
      * Starts a profiling tree. Almost always you will want to register this as an MBean. This hasn't been done automatically incase you want to do something else with it.
@@ -20,7 +22,7 @@ public interface IProfile {
      * @param jmxName  is often a package name. Like 'org.example'. Just has to be unique. It is used to register MBeans
      * @param nanoTime is the clock to use. Often INanoTime.realNanoTime. For tests consider INanoTime.testNanoTime()
      */
-    static IProfile root(String jmxName, INanoTime nanoTime) {return new Profile(jmxName, nanoTime, IPathMap.make(ProfileBuckets::create));}
+    static IProfile root(String jmxName, INanoTime nanoTime) {return new Profile(jmxName, nanoTime, IPathMap.make(ProfileBuckets::create), e ->{});}
     /**
      * Create a child of this profile. There are three main reasons for doing this: <ul>
      * <li>In a class, with the name of the class as the 'name'. This would often be registered as an mbean (call .registerMBean)</li>
@@ -49,6 +51,7 @@ public interface IProfile {
      * The profiler is registered as a MBean. If you call it twice it will throw exceptions, so usually this is done to 'static final' profile
      */
     IProfile registerMBean();
+    IProfile withErrorHandler(Consumer<Exception> errorHandler);
 
     /**
      * Useful when debugging or manually you want to dump the results of the profiler
