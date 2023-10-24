@@ -1,0 +1,10 @@
+{
+  "request": {
+    "mbean": "com.stva.global:name=ConstitutionFactureMDB.onMessageBean,type=Profile",
+    "type": "exec",
+    "operation": "json"
+  },
+  "value": "{\n  \"ConstitutionFactureMDB.onMessageBean\":{\"count\":0,\"avg\":0,\"total\":0,\"<10ms\":{\"count\":0,\"total\":0,\"avg\":0,\"snapshot\":0},\"<100ms\":{\"count\":0,\"total\":0,\"avg\":0,\"snapshot\":0},\"<1s:\":{\"count\":0,\"total\":0,\"avg\":0,\"snapshot\":0},\"<10s\":{\"count\":0,\"total\":0,\"avg\":0,\"snapshot\":0},\"rest\":{\"count\":0,\"total\":0,\"avg\":0,\"snapshot\":0}}\n}",
+  "timestamp": 1698051820,
+  "status": 200
+}

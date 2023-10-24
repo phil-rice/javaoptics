@@ -19,10 +19,10 @@ class MapHelpersTest {
         map.put("5longlonglongname", 5);
         assertEquals(
                 "{\n" +
-                        "  \"1one\"             :1one=1\n" +
-                        "  \"2two\"             :2two=2\n" +
-                        "  \"3three\"           :3three=3\n" +
-                        "  \"4four\"            :4four=4\n" +
+                        "  \"1one\"             :1one=1,\n" +
+                        "  \"2two\"             :2two=2,\n" +
+                        "  \"3three\"           :3three=3,\n" +
+                        "  \"4four\"            :4four=4,\n" +
                         "  \"5longlonglongname\":5longlonglongname=5\n" +
                         "}", MapHelpers.jsonPrint("\n", map, (k, i) -> k + "=" + i));
 

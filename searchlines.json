@@ -1,0 +1,4 @@
+com.stva.global:name=,type=Profile
+com.stva.global:name=MenuControl.buildMenu,type=Profile
+com.stva.global:name=ConstitutionFactureMDB.onMessageBean,type=Profile
+com.stva.global:name=MenuControl.initCompetenceComptabilite,type=Profile

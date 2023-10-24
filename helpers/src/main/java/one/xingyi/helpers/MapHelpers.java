@@ -20,7 +20,7 @@ public interface MapHelpers {
         Collections.sort(list);
         int maxLength = list.stream().mapToInt(String::length).max().orElse(0) + 2;
         for (String key : list) {
-            if (sb.length() > 2) sb.append(separator);
+            if (sb.length() > 2) {sb.append(','); sb.append(separator);} ;
             sb.append("  ");
             sb.append(String.format("%-" + maxLength + "s", StringHelper.doubleQuote.apply(key)));
             sb.append(":");
@@ -30,7 +30,7 @@ public interface MapHelpers {
         return sb.toString();
     }
 
-    static <K, V> V getOrAdd(Map<K, V> map, K key, Supplier< V> fn) {
+    static <K, V> V getOrAdd(Map<K, V> map, K key, Supplier<V> fn) {
         V result = map.get(key);
         if (result == null) {
             V value = fn.get();

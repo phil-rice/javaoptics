@@ -6,7 +6,7 @@
   <parent>
     <groupId>one.xingyi</groupId>
     <artifactId>parent</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.5</version>
   </parent>
 
   <artifactId>optics</artifactId>

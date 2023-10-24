@@ -26,6 +26,9 @@ public interface StringHelper {
         return s.replaceAll("'", "\"");
     }
 
+    public static String sanitizeForObjectName(String url) {
+        return url.replaceAll("[^a-zA-Z0-9]", "_");
+    }
     static String toJsonObject(Object... avs) {
         return "{" + toAttributeValue(",", avs) + "}";
     }
