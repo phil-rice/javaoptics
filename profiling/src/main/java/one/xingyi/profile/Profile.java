@@ -21,6 +21,7 @@ public class Profile implements IProfile, IProfileInfo, ProfileMBean {
     final INanoTime nanoTime;
     final IPathMap<ProfileBuckets<ProfileBucket>> map;
     final Consumer<Exception> errorHandler;
+    public INanoTime timer() {return nanoTime;}
     @Override
     public <T, E extends Exception> T profile(SupplierWithExceptionE<T, E> fn) throws E {
         long start = nanoTime.nanoTime();
@@ -53,6 +54,10 @@ public class Profile implements IProfile, IProfileInfo, ProfileMBean {
             ProfileBuckets.add(map.get(), duration);
         }
     }
+    public void record( long duration) {
+        ProfileBuckets.add(map.get(), duration);
+    }
+
     @Override
     public IProfile child(String name) {return new Profile(jmxName, nanoTime, map.child(name), errorHandler);}
     @Override
@@ -104,6 +109,10 @@ public class Profile implements IProfile, IProfileInfo, ProfileMBean {
 
     @Override
     public void clear() {
+        map.fold(null, (acc, path, buckets) -> {
+            ProfileBuckets.clear(buckets);
+            return null;
+        });
         ProfileBuckets.clear(map.get());
     }
 

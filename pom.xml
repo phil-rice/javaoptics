@@ -6,7 +6,7 @@
 
   <groupId>one.xingyi</groupId>
   <artifactId>parent</artifactId>
-  <version>1.5.5</version>
+  <version>1.5.9</version>
   <packaging>pom</packaging>
   <name>javaOptics</name>
   <description>Tools for handling immutability in Java using optics</description>
@@ -34,6 +34,7 @@
     <module>helpers</module>
     <module>fp</module>
     <module>profiling</module>
+    <module>profilingJspTest</module>
     <module>sqlandparams</module>
     <module>sqlandparamstest</module>
     <module>rawprocessors</module>
@@ -51,39 +52,85 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>9.4.51.v20230217</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlet</artifactId>
+        <scope>provided</scope>
+        <version>9.4.51.v20230217</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-jsp</artifactId>
+        <version>9.2.30.v20200428</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>apache-jsp</artifactId>
+        <version>9.4.51.v20230217</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-webapp</artifactId>
+        <version>9.4.51.v20230217</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>4.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet.jsp</groupId>
+        <artifactId>javax.servlet.jsp-api</artifactId>
+        <version>2.3.3</version>
+        <scope>provided</scope>
+      </dependency>
+
+
+      <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>optics</artifactId>
-        <version>1.5.5</version>
+        <version>1.5.9</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>fp</artifactId>
-        <version>1.5.5</version>
+        <version>1.5.9</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>helpers</artifactId>
-        <version>1.5.5</version>
+        <version>1.5.9</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>processors</artifactId>
-        <version>1.5.5</version>
+        <version>1.5.9</version>
+      </dependency>
+      <dependency>
+        <groupId>one.xingyi</groupId>
+        <artifactId>profiling</artifactId>
+        <version>1.5.9</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>rawprocessors</artifactId>
-        <version>1.5.5</version>
+        <version>1.5.9</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>interfaces</artifactId>
-        <version>1.5.5</version>
+        <version>1.5.9</version>
       </dependency>
       <dependency>
         <groupId>one.xingyi</groupId>
         <artifactId>sqlandparams</artifactId>
-        <version>1.5.5</version>
+        <version>1.5.9</version>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>
@@ -131,6 +178,18 @@
   </dependencies>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.1.2</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.2</version>
+          </dependency>
+        </dependencies>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>

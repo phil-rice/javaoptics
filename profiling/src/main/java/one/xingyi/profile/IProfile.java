@@ -8,6 +8,8 @@ import one.xingyi.profile.pathmap.IPathMap;
 import java.util.function.Consumer;
 
 public interface IProfile {
+    INanoTime timer();
+
     /**
      * Starts a profiling tree. Almost always you will want to register this as an MBean. This hasn't been done automatically incase you want to do something else with it.
      * This will almost always be a 'final static' field, and is often defined in a class made by the user called 'Profile' or 'Profiler'
@@ -47,6 +49,8 @@ public interface IProfile {
      * Time how longs it takes to run the runnable. This is identically to child(name).run(runnable).
      */
     default <E extends Exception> void run(String name, RunnableWithExceptionE<E> fn) throws E {child(name).run(fn);}
+
+    public void record( long duration);
     /**
      * The profiler is registered as a MBean. If you call it twice it will throw exceptions, so usually this is done to 'static final' profile
      */

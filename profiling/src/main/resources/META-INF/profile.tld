@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+  <tlib-version>1.0</tlib-version>
+  <short-name>prof</short-name>
+  <uri>http://www.example.com/tags/profiling</uri>
+
+  <tag>
+    <name>profile</name>
+    <description>Profile the execution time of code within the tag's body.</description>
+    <tag-class>one.xingyi.profile.ProfileTag</tag-class>
+    <body-content>scriptless</body-content>
+
+    <attribute>
+      <name>id</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>The ID used for profiling.</description>
+    </attribute>
+
+    <attribute>
+      <name>profiler</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>one.xingyi.profile.IProfile</type>
+      <description>The profiler instance to be used for recording the duration.</description>
+    </attribute>
+
+  </tag> <!-- Start Profile Tag -->
+  <tag>
+    <name>start</name>
+    <tag-class>one.xingyi.profile.StartProfileTag</tag-class>
+    <body-content>empty</body-content>
+    <description>Start the profiling for a segment.</description>
+    <attribute>
+      <name>id</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>An identifier for the profile segment.</description>
+    </attribute>
+    <attribute>
+      <name>profiler</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>one.xingyi.profile.IProfile</type>
+      <description>The profiler instance to be used for recording the duration.</description>
+    </attribute>
+  </tag>
+
+  <!-- End Profile Tag -->
+  <tag>
+    <name>end</name>
+    <tag-class>one.xingyi.profile.EndProfileTag</tag-class>
+    <body-content>empty</body-content>
+    <description>End the profiling for a segment and log/store the result.</description>
+    <attribute>
+      <name>id</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>An identifier for the profile segment.</description>
+    </attribute>
+    <attribute>
+      <name>profiler</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The profile instance to record the timing.</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>delay</name>
+    <tag-class>one.xingyi.profile.DelayTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>delay</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+    </attribute>
+  </tag>
+</taglib>

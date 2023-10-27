@@ -5,6 +5,7 @@ import one.xingyi.interfaces.INanoTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static one.xingyi.helpers.StringHelper.removeWhiteSpace;
 import static one.xingyi.helpers.StringHelper.toDoubleQuotes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,7 +16,7 @@ class ProfileTest {
             "'<10s':{'count':0,'total':0,'avg':0,'snapshot':0}," +
             "'rest':{'count':0,'total':0,'avg':0,'snapshot':0}}");
     String childTwoCallsJson = toDoubleQuotes(
-            "{'<10ms':{'count':2,'total':2,'avg':1,'snapshot':1}," +
+            "{'count':2,'avg':1,'total':2,'<10ms':{'count':2,'total':2,'avg':1,'snapshot':1}," +
                     "'<100ms':{'count':0,'total':0,'avg':0,'snapshot':0}," +
                     "'<1s:':{'count':0,'total':0,'avg':0,'snapshot':0}," +
                     "'<10s':{'count':0,'total':0,'avg':0,'snapshot':0}," +
@@ -51,8 +52,8 @@ class ProfileTest {
         Profile child = (Profile) profile.child("a").child("b").child("c");
         child.run(() -> {});
         child.run(() -> {});
-        assertEquals(toDoubleQuotes("{'a.b.c':" + childTwoCallsJson + "}"), child.json());
-        assertEquals(toDoubleQuotes("{'':" + emptyInfoJson + ",'a':" + emptyInfoJson + ",'a.b':" + emptyInfoJson + ",'a.b.c':" + childTwoCallsJson + "}"), profile.json());
+        assertEquals(toDoubleQuotes("{'a.b.c':" + childTwoCallsJson + "}"), removeWhiteSpace(child.json()));
+        assertEquals(toDoubleQuotes("{'':" + emptyInfoJson + ",'a':" + emptyInfoJson + ",'a.b':" + emptyInfoJson + ",'a.b.c':" + childTwoCallsJson + "}"), removeWhiteSpace(profile.json()));
     }
     private static Profile getProfile() {
         return (Profile) IProfile.root("pck", INanoTime.testNanoTime());

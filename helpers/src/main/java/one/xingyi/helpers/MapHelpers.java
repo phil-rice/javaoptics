@@ -15,7 +15,8 @@ public interface MapHelpers {
 
     static <V> String jsonPrint(String separator, Map<String, V> map, BiFunction<String, V, String> fn) {
         StringBuilder sb = new StringBuilder();
-        sb.append("{\n");
+        sb.append("{");
+        sb.append(separator);
         List<String> list = new ArrayList<>(map.keySet());
         Collections.sort(list);
         int maxLength = list.stream().mapToInt(String::length).max().orElse(0) + 2;
@@ -26,7 +27,8 @@ public interface MapHelpers {
             sb.append(":");
             sb.append(fn.apply(key, map.get(key)));
         }
-        sb.append("\n}");
+        sb.append(separator);
+        sb.append("}");
         return sb.toString();
     }
 

@@ -6,12 +6,25 @@
   <parent>
     <groupId>one.xingyi</groupId>
     <artifactId>parent</artifactId>
-    <version>1.5.5</version>
+    <version>1.5.9</version>
   </parent>
 
   <artifactId>profiling</artifactId>
 
   <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <version>2.3.1</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>one.xingyi</groupId>
       <artifactId>interfaces</artifactId>

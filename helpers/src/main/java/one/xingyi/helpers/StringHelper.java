@@ -25,6 +25,9 @@ public interface StringHelper {
     static String toDoubleQuotes(String s) {
         return s.replaceAll("'", "\"");
     }
+    static String removeWhiteSpace(String s) {
+        return s.replaceAll("\\s", "");
+    }
 
     public static String sanitizeForObjectName(String url) {
         return url.replaceAll("[^a-zA-Z0-9]", "_");
