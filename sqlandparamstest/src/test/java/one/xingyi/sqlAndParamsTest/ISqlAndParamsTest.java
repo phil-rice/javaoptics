@@ -3,12 +3,14 @@ package one.xingyi.sqlAndParamsTest;
 import lombok.*;
 import net.sf.jsqlparser.JSQLParserException;
 import one.xingyi.fp.IPartialFunction;
+import one.xingyi.helpers.StringHelper;
 import one.xingyi.sqlAndParams.ISqlAndParams;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static one.xingyi.helpers.StringHelper.removeWhiteSpace;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ISqlAndParamsTestTest {
@@ -51,9 +53,9 @@ class ISqlAndParamsTestTest {
     }
 
     @Test
-    void testCheckLegalSqlGivesNiceMessage(){
+    void testCheckLegalSqlGivesNiceMessage() {
         var e = assertThrows(MalformedSqlException.class, () -> ISqlAndParamsTest.checkSqlLegal("select * from"));
-        assertEquals("Malformed SQL :\nselect * from", e.getMessage());
+        assertEquals("MalformedSQL:select*from", removeWhiteSpace(e.getMessage()));
         assertEquals("select * from", e.sql);
     }
     @RequiredArgsConstructor
