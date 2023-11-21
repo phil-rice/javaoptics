@@ -17,7 +17,7 @@ public interface IProfile {
      *
      * <p>
      * Normally this profiling tree is 'global' and the profiler not actually used. Usually a child would be made for each class that is being profiled
-     * <br />
+     *<br>
      * <p>Example</p>
      * static final IProfile main = IProfile.root("one.xingyi.profile", INanoTime.testNanoTime()).registerMBean();
      *
