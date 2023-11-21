@@ -7,7 +7,7 @@
 
   <tlib-version>1.0</tlib-version>
   <short-name>prof</short-name>
-  <uri>http://www.example.com/tags/profiling</uri>
+  <uri>http://one.xingyi.profile/tags/profiling</uri>
 
   <tag>
     <name>profile</name>

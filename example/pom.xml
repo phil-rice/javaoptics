@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>one.xingyi</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.0.13-SNAPSHOT</version>
+    <artifactId>javaoptics</artifactId>
+    <version>1.5.10-SNAPSHOT</version>
   </parent>
   <artifactId>example</artifactId>
   <properties>
@@ -30,7 +30,7 @@
       <groupId>one.xingyi</groupId>
       <artifactId>helpers</artifactId>
       <version>${xingyi.version}</version>
-      <scope>test</scope>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

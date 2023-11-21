@@ -1,10 +1,6 @@
 <%@ taglib prefix="profile" uri="/WEB-INF/profile.tld" %>
 
-<%
-    // Directly reference the static profiler
-    one.xingyi.profile.IProfile profiler=one.xingyi.profilingJsp.ProfilerForTests.profiler;
-    pageContext.setAttribute("profiler", profiler);
-%>
+<% pageContext.setAttribute("profiler", one.xingyi.profilingJsp.ProfilerForTests.profiler);%>
 
 <profile:profile id="profileTag" profiler="${profiler}">
     <profile:delay/>

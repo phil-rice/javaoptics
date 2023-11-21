@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>one.xingyi</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>javaoptics</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>example</artifactId>

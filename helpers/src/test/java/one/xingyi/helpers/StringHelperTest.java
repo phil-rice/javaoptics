@@ -37,7 +37,7 @@ class StringHelperTest {
     public void testSanitizeForObjectName() {
         assertEquals("example_com", StringHelper.sanitizeForObjectName("example.com"));
         assertEquals("example_com_123", StringHelper.sanitizeForObjectName("example.com/123"));
-        assertEquals("https_example_com", StringHelper.sanitizeForObjectName("https://example.com"));
+        assertEquals("https___example_com", StringHelper.sanitizeForObjectName("https://example.com"));
         assertEquals("special_characters_____", StringHelper.sanitizeForObjectName("special_characters!@#$%"));
         assertEquals("mixed_case_Example_COM", StringHelper.sanitizeForObjectName("mixed-case_Example.COM"));
         assertEquals("only_numbers_1234567890", StringHelper.sanitizeForObjectName("only-numbers_1234567890"));
