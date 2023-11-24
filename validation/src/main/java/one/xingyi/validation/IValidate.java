@@ -64,7 +64,7 @@ public interface IValidate<T> extends BiFunction<List<String>, T, List<String>> 
         return (path, t) -> IValidate.<Field>notNull().apply(append(path, fieldName), fieldFn.apply(t));
     }
     static IValidate<String> minLength(int minLength) {
-        return IValidate.<String>shouldBe("{0} Should have a min length of " + minLength, s -> s.length() > minLength);
+        return IValidate.<String>shouldBe("{0} has value {1}. Should have a min length of " + minLength, s -> s.length() >= minLength);
     }
 
     static <T> IValidate<T> fieldMinLength(String fieldName, Function<T, String> fieldFn, int minLength) {
@@ -72,7 +72,7 @@ public interface IValidate<T> extends BiFunction<List<String>, T, List<String>> 
     }
 
     static IValidate<String> maxLength(int maxLength) {
-        return IValidate.<String>shouldBe("{0} Should have a max length of " + maxLength, s -> s.length() > maxLength);
+        return IValidate.<String>shouldBe("{0} has value {1}. Should have a max length of " + maxLength, s -> s.length() <= maxLength);
     }
 
     static <T> IValidate<T> fieldMaxLength(String fieldName, Function<T, String> fieldFn, int maxLength) {

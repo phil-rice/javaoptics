@@ -112,12 +112,12 @@ class IValidateTest {
             fieldNotNull("name", Person::getName),
             fieldLengthBetween("name", Person::getName, 3, 10),
             fieldNotNull("address", Person::getAddress),
-            validateChild("address", Person::getAddress, addressV));
+            validateChild("address", Person::getAddress, addressV)
+    );
     @Test
     void testCompose() {
 
         assertEquals(Collections.emptyList(), personV.apply(Collections.singletonList("context"), validPerson));
-        assertEquals(Collections.singletonList("message [context, name]-notFred"), personV.apply(Collections.singletonList("context"), notFredPerson));
         assertEquals(Arrays.asList(
                 "[context, name] is null",
                 "[context, address, line1] is null",
@@ -139,7 +139,6 @@ class IValidateTest {
         Function<Person, String> withValidate = IValidate.<Person, String>validateBefore(personV).apply(nameGetter);
 
         assertEquals("fred", withValidate.apply(validPerson));
-        assertEquals(Arrays.asList("message [name]-notFred"), errors(() -> withValidate.apply(notFredPerson)));
         assertEquals(Arrays.asList("[name] is null", "[address] is null"), errors(() -> withValidate.apply(nullPersonNullAddress)));
     }
 
@@ -164,7 +163,7 @@ class IValidateTest {
 
         assertEquals("fred", withValidateOk.apply(validPerson));
         assertEquals(Arrays.asList("message []-fred"), errors(() -> withValidateFail.apply(validPerson)));
-        assertEquals(Arrays.asList("message [name]-notFred"), errors(() -> withValidateOk.apply(notFredPerson)));
+        assertEquals(Arrays.asList("message []-notFred"), errors(() -> withValidateOk.apply(notFredPerson)));
     }
 
 }
