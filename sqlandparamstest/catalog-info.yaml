@@ -15,6 +15,6 @@ spec:
   type: library
   owner: phil.rice@validoc.org
   lifecycle: production
-  dependsOn:
+  dependsOn: 
    -  component:one.xingyi.fp
    -  component:one.xingyi.sqlandparams
