@@ -75,3 +75,10 @@ mvn clean deploy -P release
 mvn versions:set "-DnewVersion=x.y.y-SNAPSHOT"
 ```
 
+# Backstage
+
+Added using [Backstage cli tool](https://www.npmjs.com/package/@runbook/backstage) 
+
+```shell
+backstage catalog make --name JavaOptics --owner phil.rice@validoc.org -l production
+```
