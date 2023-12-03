@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>profiling</artifactId>
-
+<description>Basic profiling tools. Allows profiling and the use of JMX beans to access the profiles</description>
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>

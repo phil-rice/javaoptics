@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>profilingJspTest</artifactId>
-
+<description>A class that just tests things.</description>
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>

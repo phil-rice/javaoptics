@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>sqlandparams</artifactId>
-
+<description>A test of tools for allowing easy generation / testing of sql. </description>
   <dependencies>
     <dependency>
       <groupId>one.xingyi</groupId>

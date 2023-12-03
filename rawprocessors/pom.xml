@@ -10,6 +10,7 @@
   </parent>
   <artifactId>rawprocessors</artifactId>
 
+  <description>The raw annotation processors that generate optics for classes and records. Because of the lifecycle of the processors this is rarely used directly. Using 'processors' instead</description>
 
   <dependencies>
     <dependency>

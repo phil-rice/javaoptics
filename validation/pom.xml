@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>validation</artifactId>
-
+  <description>A library for basic validation using FP principles</description>
   <dependencies>
     <dependency>
       <groupId>one.xingyi</groupId>

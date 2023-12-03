@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: one.xingyi.helpers
-  description: Not provided in the POM
+  description: The basic helpers that every project ends up getting. Things for messing with stings, lists, maps and so on
   tags:
     - java
     - maven

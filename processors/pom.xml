@@ -9,7 +9,7 @@
     <version>1.5.10-SNAPSHOT</version>
   </parent>
   <artifactId>processors</artifactId>
-
+  <description>Include this for the annotation processor and annotations that allow autogeneration of optics for classes and records</description>
 
   <dependencies>
     <dependency>

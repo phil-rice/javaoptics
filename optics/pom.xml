@@ -10,6 +10,7 @@
   </parent>
 
   <artifactId>optics</artifactId>
+  <description>Utilities for copying, updating and reading handling immutable data</description>
 
   <dependencies>
     <dependency>

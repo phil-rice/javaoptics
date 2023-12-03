@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: one.xingyi.sqlandparamstest
-  description: Not provided in the POM
+  description: A test library
   tags:
     - java
     - maven

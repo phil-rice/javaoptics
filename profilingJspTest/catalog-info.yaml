@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: one.xingyi.profilingJspTest
-  description: Not provided in the POM
+  description: A class that just tests things.
   tags:
     - java
     - maven

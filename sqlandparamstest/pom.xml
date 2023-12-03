@@ -11,7 +11,7 @@
 
 
   <artifactId>sqlandparamstest</artifactId>
-
+  <description>A test library</description>
   <dependencies>
     <dependency>
       <groupId>one.xingyi</groupId>

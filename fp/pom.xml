@@ -10,6 +10,7 @@
   </parent>
 
   <artifactId>fp</artifactId>
+  <description>A set of basic functional programming tools. Such as Partial functions and Comprehensions.</description>
 
   <dependencies>
     <dependency>

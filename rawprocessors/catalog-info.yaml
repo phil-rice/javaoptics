@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: one.xingyi.rawprocessors
-  description: Not provided in the POM
+  description: The raw annotation processors that generate optics for classes and records. Because of the lifecycle of the processors this is rarely used directly. Using 'processors' instead
   tags:
     - java
     - maven
