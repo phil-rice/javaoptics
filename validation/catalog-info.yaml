@@ -16,5 +16,5 @@ spec:
   owner: phil.rice@validoc.org
   lifecycle: production
   dependsOn:
-   -  one.xingyi.fp
-   -  one.xingyi.helpers
+   -  component:one.xingyi.fp
+   -  component:one.xingyi.helpers

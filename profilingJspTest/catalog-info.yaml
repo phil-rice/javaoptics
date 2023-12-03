@@ -16,4 +16,4 @@ spec:
   owner: phil.rice@validoc.org
   lifecycle: production
   dependsOn:
-   -  one.xingyi.profiling
+   -  component:one.xingyi.profiling

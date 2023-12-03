@@ -16,4 +16,4 @@ spec:
   owner: phil.rice@validoc.org
   lifecycle: production
   dependsOn:
-   -  one.xingyi.interfaces
+   -  component:one.xingyi.interfaces
