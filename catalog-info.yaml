@@ -10,9 +10,7 @@ spec:
    -  ./helpers/catalog-info.yaml
    -  ./fp/catalog-info.yaml
    -  ./profiling/catalog-info.yaml
-   -  ./profilingJspTest/catalog-info.yaml
    -  ./sqlandparams/catalog-info.yaml
-   -  ./sqlandparamstest/catalog-info.yaml
    -  ./rawprocessors/catalog-info.yaml
    -  ./processors/catalog-info.yaml
    -  ./optics/catalog-info.yaml

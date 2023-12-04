@@ -8,6 +8,7 @@
     <artifactId>javaoptics</artifactId>
     <version>1.5.10-SNAPSHOT</version>
   </parent>
+  <properties><backstage.ignore>true</backstage.ignore></properties>
 
   <artifactId>profilingJspTest</artifactId>
 <description>A class that just tests things.</description>
