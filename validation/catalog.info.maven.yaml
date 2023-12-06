@@ -2,18 +2,19 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: one.xingyi.helpers
-  description: The basic helpers that every project ends up getting. Things for messing with stings, lists, maps and so on
+  name: one.xingyi.validation
+  description: A library for basic validation using FP principles
   tags:
     - java
     - maven
   annotations:
     backstage.io/source-location: https://github.com/phil-rice/javaoptics.git
     backstage.io/maven-group-id: one.xingyi
-    backstage.io/maven-artifact-id: helpers
+    backstage.io/maven-artifact-id: validation
 spec:
   type: library
   owner: phil-rice
-  lifecycle: production
+  lifecycle: experimental
   dependsOn: 
-   -  component:one.xingyi.interfaces
+   -  component:one.xingyi.fp
+   -  component:one.xingyi.helpers

@@ -2,16 +2,18 @@
 apiVersion: backstage.io/v1alpha1
 kind: Location
 metadata:
-  name: JavaOptics
+  name: location.one.xingyi.javaoptics
 spec:
   type: url
   targets:
-   -  ./interfaces/catalog-info.yaml
-   -  ./helpers/catalog-info.yaml
-   -  ./fp/catalog-info.yaml
-   -  ./profiling/catalog-info.yaml
-   -  ./sqlandparams/catalog-info.yaml
-   -  ./rawprocessors/catalog-info.yaml
-   -  ./processors/catalog-info.yaml
-   -  ./optics/catalog-info.yaml
-   -  ./validation/catalog-info.yaml
+    - ./catalog-info.maven.yaml
+    - ./example/catalog-info.maven.yaml
+    - ./fp/catalog-info.maven.yaml
+    - ./helpers/catalog-info.maven.yaml
+    - ./interfaces/catalog-info.maven.yaml
+    - ./optics/catalog-info.maven.yaml
+    - ./processors/catalog-info.maven.yaml
+    - ./profiling/catalog-info.maven.yaml
+    - ./rawprocessors/catalog-info.maven.yaml
+    - ./sqlandparams/catalog-info.maven.yaml
+    - ./validation/catalog-info.maven.yaml

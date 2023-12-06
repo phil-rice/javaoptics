@@ -2,19 +2,20 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: one.xingyi.optics
-  description: Utilities for copying, updating and reading handling immutable data
+  name: one.xingyi.example
+  description: "..."
   tags:
     - java
     - maven
   annotations:
     backstage.io/source-location: https://github.com/phil-rice/javaoptics.git
     backstage.io/maven-group-id: one.xingyi
-    backstage.io/maven-artifact-id: optics
+    backstage.io/maven-artifact-id: example
 spec:
   type: library
   owner: phil-rice
-  lifecycle: production
+  lifecycle: experimental
   dependsOn: 
-   -  component:one.xingyi.fp
+   -  component:one.xingyi.optics
+   -  component:one.xingyi.processors
    -  component:one.xingyi.helpers

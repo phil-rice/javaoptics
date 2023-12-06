@@ -2,18 +2,18 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: one.xingyi.rawprocessors
-  description: The raw annotation processors that generate optics for classes and records. Because of the lifecycle of the processors this is rarely used directly. Using 'processors' instead
+  name: one.xingyi.helpers
+  description: The basic helpers that every project ends up getting. Things for messing with stings, lists, maps and so on
   tags:
     - java
     - maven
   annotations:
     backstage.io/source-location: https://github.com/phil-rice/javaoptics.git
     backstage.io/maven-group-id: one.xingyi
-    backstage.io/maven-artifact-id: rawprocessors
+    backstage.io/maven-artifact-id: helpers
 spec:
   type: library
   owner: phil-rice
-  lifecycle: production
+  lifecycle: experimental
   dependsOn: 
    -  component:one.xingyi.interfaces

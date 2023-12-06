@@ -2,18 +2,17 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: one.xingyi.processors
-  description: Include this for the annotation processor and annotations that allow autogeneration of optics for classes and records
+  name: one.xingyi.javaoptics
+  description: Tools for handling immutability in Java using optics
   tags:
     - java
     - maven
   annotations:
     backstage.io/source-location: https://github.com/phil-rice/javaoptics.git
     backstage.io/maven-group-id: one.xingyi
-    backstage.io/maven-artifact-id: processors
+    backstage.io/maven-artifact-id: javaoptics
 spec:
   type: library
   owner: phil-rice
-  lifecycle: production
-  dependsOn: 
-   -  component:one.xingyi.rawprocessors
+  lifecycle: experimental
+  
