@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: one.xingyi.processors
-  description: edited Include this for the annotation processor and annotations that allow autogeneration of optics for classes and records
+  description: Include this for the annotation processor and annotations that allow autogeneration of optics for classes and records
   tags:
     - java
     - maven
@@ -13,7 +13,7 @@ metadata:
     backstage.io/maven-artifact-id: processors
 spec:
   type: library
-  owner: unknown-entity
+  owner: phil-rice
   lifecycle: experimental
   dependsOn: 
    -  component:one.xingyi.rawprocessors
