@@ -13,7 +13,7 @@ metadata:
     backstage.io/maven-artifact-id: processors
 spec:
   type: library
-  owner: phil-rice
+  owner: unknown-entity
   lifecycle: experimental
   dependsOn: 
    -  component:one.xingyi.rawprocessors
