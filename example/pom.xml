@@ -10,8 +10,6 @@
   </parent>
   <artifactId>example</artifactId>
   <properties>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <xingyi.version>1.0.13-SNAPSHOT</xingyi.version>
   </properties>
@@ -19,17 +17,17 @@
     <dependency>
       <groupId>one.xingyi</groupId>
       <artifactId>optics</artifactId>
-      <version>${xingyi.version}</version>
+      <version>1.5.10-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>one.xingyi</groupId>
       <artifactId>processors</artifactId>
-      <version>${xingyi.version}</version>
+      <version>1.5.10-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>one.xingyi</groupId>
       <artifactId>helpers</artifactId>
-      <version>${xingyi.version}</version>
+      <version>1.5.10-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

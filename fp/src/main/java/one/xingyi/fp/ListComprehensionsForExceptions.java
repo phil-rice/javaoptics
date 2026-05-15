@@ -1,11 +1,9 @@
 package one.xingyi.fp;
 
-import lombok.var;
 import one.xingyi.interfaces.BiFunctionWithException;
 import one.xingyi.interfaces.ConsumerWithException;
 import one.xingyi.interfaces.FunctionWithException;
 
-import java.io.IOException;
 import java.util.*;
 
 public interface ListComprehensionsForExceptions {

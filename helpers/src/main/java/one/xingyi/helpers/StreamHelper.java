@@ -1,10 +1,7 @@
 package one.xingyi.helpers;
 
-import lombok.var;
-
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,7 +10,7 @@ public interface StreamHelper {
         return opt.map(Stream::of).orElseGet(Stream::empty);
     }
     static <T> Stream<T> lastN(Stream<T> s, int n) {
-        var list = s.collect(Collectors.toList());
+        List<T> list = s.collect(Collectors.toList());
         return list.subList(Math.max(0, list.size() - n), list.size()).stream();
     }
     static <T> T last(Stream<T> s) {

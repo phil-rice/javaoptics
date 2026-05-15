@@ -1,7 +1,5 @@
 package one.xingyi.profile;
 
-import lombok.var;
-import one.xingyi.helpers.StringHelper;
 import one.xingyi.interfaces.INanoTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

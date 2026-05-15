@@ -3,13 +3,14 @@ package one.xingyi.sqlAndParams;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.var;
 import one.xingyi.fp.IPartialFunction;
 import one.xingyi.helpers.ListHelpers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static one.xingyi.fp.Safe.safeString;
 

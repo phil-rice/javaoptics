@@ -1,13 +1,12 @@
 package one.xingyi.sqlAndParams;
 
 import lombok.val;
-import lombok.var;
 import one.xingyi.fp.IPartialFunction;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ISqlAndParamsTest {
 

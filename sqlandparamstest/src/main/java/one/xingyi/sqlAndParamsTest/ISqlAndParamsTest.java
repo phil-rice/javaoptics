@@ -1,12 +1,8 @@
 package one.xingyi.sqlAndParamsTest;
 
-import lombok.SneakyThrows;
-import lombok.var;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import one.xingyi.fp.IPartialFunction;
-import one.xingyi.fp.IPartialFunctionE;
-import one.xingyi.helpers.Permutations;
 import one.xingyi.sqlAndParams.ISqlAndParams;
 
 import java.util.List;

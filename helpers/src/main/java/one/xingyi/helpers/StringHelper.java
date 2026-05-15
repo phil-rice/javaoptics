@@ -1,7 +1,5 @@
 package one.xingyi.helpers;
 
-import lombok.var;
-
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -14,7 +12,7 @@ public interface StringHelper {
 
     static String quoteIfNeededForJson(Object o) {
         if (Number.class.isAssignableFrom(o.getClass())) return o.toString();
-        var s = o.toString();
+        String s = o.toString();
         if (s.startsWith("{") && s.endsWith("}")) return s;
         return '"' + o.toString() + '"';
     }

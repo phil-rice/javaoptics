@@ -1,6 +1,5 @@
 package one.xingyi.optics.annotations.processors;
 
-import lombok.var;
 import one.xingyi.optics.annotations.Optics;
 import one.xingyi.optics.annotations.serialise.IAnnotationProcessorStore;
 import org.stringtemplate.v4.STGroupFile;
@@ -19,9 +18,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SupportedAnnotationTypes({"one.xingyi.optics.annotations.Optics"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class Processor extends AbstractProcessor {
-
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
     private Messager messager;
     private ProcessingEnvironment pEnv;
     private Filer filer;

@@ -3,7 +3,6 @@ package one.xingyi.fp;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.var;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

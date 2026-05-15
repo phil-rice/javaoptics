@@ -1,7 +1,6 @@
 package one.xingyi.fp;
 
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 import one.xingyi.helpers.Permutations;
 
 import java.util.ArrayList;

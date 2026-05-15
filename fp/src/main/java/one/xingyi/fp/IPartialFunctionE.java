@@ -1,7 +1,6 @@
 package one.xingyi.fp;
 
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 import one.xingyi.interfaces.FunctionWithException;
 import one.xingyi.interfaces.PredicateWithException;
 
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public interface IPartialFunctionE<From, To> extends FunctionWithException<From, To> {

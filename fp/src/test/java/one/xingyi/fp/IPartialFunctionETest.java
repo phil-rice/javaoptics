@@ -1,6 +1,5 @@
 package one.xingyi.fp;
 
-import lombok.var;
 import one.xingyi.interfaces.FunctionWithException;
 import one.xingyi.interfaces.PredicateWithException;
 import org.junit.jupiter.api.Test;
